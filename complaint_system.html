@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Centurion University - Complaint Tracking System</title>
+
     <style>
         * {
             margin: 0;
@@ -33,12 +35,12 @@
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 2px 4px rgba(0,0,0,.3);
         }
 
         .header p {
             font-size: 1.1em;
-            opacity: 0.9;
+            opacity: .9;
         }
 
         .nav-tabs {
@@ -58,13 +60,13 @@
             border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: .3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
         }
 
         .nav-tabs button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,.2);
         }
 
         .nav-tabs button.active {
@@ -77,8 +79,8 @@
             background: white;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,.2);
+            animation: slideIn .3s ease;
         }
 
         .tab-content.active {
@@ -90,10 +92,16 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
         }
 
         .form-group {
@@ -105,7 +113,7 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: #333;
-            font-size: 0.95em;
+            font-size: .95em;
         }
 
         .form-group input,
@@ -117,7 +125,7 @@
             border-radius: 8px;
             font-size: 1em;
             font-family: inherit;
-            transition: border-color 0.3s ease;
+            transition: .3s;
         }
 
         .form-group input:focus,
@@ -125,7 +133,7 @@
         .form-group select:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 3px rgba(102,126,234,.1);
         }
 
         .form-group textarea {
@@ -139,7 +147,7 @@
             padding: 30px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: .3s;
             background: #f9f9f9;
         }
 
@@ -190,30 +198,32 @@
         .btn-submit {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: .3s;
             margin-top: 10px;
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 25px rgba(102,126,234,.3);
         }
 
-        .btn-submit:active {
-            transform: translateY(0);
+        .btn-submit:disabled {
+            opacity: .7;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .complaint-list {
             display: grid;
             gap: 20px;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill,minmax(350px,1fr));
         }
 
         .complaint-card {
@@ -221,11 +231,11 @@
             border-left: 5px solid #667eea;
             padding: 20px;
             border-radius: 10px;
-            transition: all 0.3s ease;
+            transition: .3s;
         }
 
         .complaint-card:hover {
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,.1);
             transform: translateY(-3px);
         }
 
@@ -248,12 +258,13 @@
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid #e0e0e0;
+            gap: 10px;
         }
 
         .status-badge {
             padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.85em;
+            font-size: .85em;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -284,7 +295,7 @@
         }
 
         .date-info {
-            font-size: 0.9em;
+            font-size: .9em;
             color: #999;
         }
 
@@ -300,12 +311,26 @@
 
         .success-message.show {
             display: block;
-            animation: slideIn 0.3s ease;
+            animation: slideIn .3s ease;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #dc3545;
+        }
+
+        .error-message.show {
+            display: block;
         }
 
         .filter-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -324,14 +349,22 @@
             color: #999;
         }
 
-        .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 20px;
-            opacity: 0.5;
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-weight: 600;
         }
 
-        @media (max-width: 768px) {
+        .admin-info {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        @media (max-width:768px) {
             .header h1 {
                 font-size: 1.8em;
             }
@@ -342,7 +375,7 @@
 
             .nav-tabs button {
                 padding: 10px 15px;
-                font-size: 0.9em;
+                font-size: .9em;
             }
 
             .complaint-list {
@@ -355,430 +388,1776 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🏛️ Complaint Tracking System</h1>
-            <p>Centurion University of Technology and Management</p>
-        </div>
 
-        <div class="nav-tabs">
-            <button class="tab-btn active" data-tab="student">📝 Student Portal</button>
-            <button class="tab-btn" data-tab="track">🔍 Track Complaint</button>
-            <button class="tab-btn" data-tab="view">📊 View All</button>
-        </div>
+<div class="container">
 
-        <!-- Student Portal Tab -->
-        <div id="student" class="tab-content active">
-            <h2>Submit a Complaint</h2>
-            <div class="success-message" id="successMsg">
-                ✓ Complaint submitted successfully! Your complaint ID is: <span id="complaintId"></span>
-            </div>
-
-            <form id="complaintForm">
-                <div class="form-group">
-                    <label for="studentName">Student Name *</label>
-                    <input type="text" id="studentName" required placeholder="Enter your full name">
-                </div>
-
-                <div class="form-group">
-                    <label for="studentEmail">Email ID *</label>
-                    <input type="email" id="studentEmail" required placeholder="your.email@centurion.ac.in">
-                </div>
-
-                <div class="form-group">
-                    <label for="studentPhone">Phone Number *</label>
-                    <input type="tel" id="studentPhone" required placeholder="9876543210">
-                </div>
-
-                <div class="form-group">
-                    <label for="complaintCategory">Complaint Category *</label>
-                    <select id="complaintCategory" required>
-                        <option value="">-- Select Category --</option>
-                        <option value="classroom">🚪 Classroom Equipment Problem</option>
-                        <option value="wifi">📡 Wi-Fi Problem</option>
-                        <option value="electricity">⚡ Electricity Problem</option>
-                        <option value="hostel">🏠 Hostel Problem</option>
-                        <option value="cleanliness">🧹 Cleanliness Problem</option>
-                        <option value="lab">🔬 Lab Equipment Problem</option>
-                        <option value="other">📌 Other</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="complaintDescription">Description *</label>
-                    <textarea id="complaintDescription" required placeholder="Describe your complaint in detail..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Upload Photo (Optional)</label>
-                    <div class="file-upload-area" id="uploadArea">
-                        <p>📤 Click to upload or drag and drop</p>
-                        <small>PNG, JPG, GIF up to 5MB</small>
-                        <input type="file" id="photoUpload" accept="image/*">
-                    </div>
-                    <div class="file-preview" id="filePreview">
-                        <p>📷 Preview:</p>
-                        <img id="previewImg" src="" alt="Preview">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit">Submit Complaint</button>
-            </form>
-        </div>
-
-        <!-- Track Complaint Tab -->
-        <div id="track" class="tab-content">
-            <h2>Track Your Complaint</h2>
-            <div class="form-group" style="max-width: 500px; margin: 30px 0;">
-                <label for="trackId">Enter Complaint ID</label>
-                <input type="text" id="trackId" placeholder="e.g., CU-001-2024" style="margin-bottom: 10px;">
-                <button class="btn-submit" onclick="searchComplaint()">Search</button>
-            </div>
-
-            <div id="trackResult" style="display: none; margin-top: 30px;">
-                <div class="complaint-card">
-                    <h3 id="trackComplaintTitle"></h3>
-                    <p><strong>Complaint ID:</strong> <span id="trackComplaintId"></span></p>
-                    <p><strong>Category:</strong> <span id="trackComplaintCategory"></span></p>
-                    <p><strong>Description:</strong> <span id="trackComplaintDesc"></span></p>
-                    <p><strong>Submitted Date:</strong> <span id="trackComplaintDate"></span></p>
-                    <div class="complaint-meta">
-                        <span class="status-badge" id="trackStatusBadge"></span>
-                        <span class="date-info" id="trackLastUpdate"></span>
-                    </div>
-
-                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
-                        <h4>Status Timeline:</h4>
-                        <div id="timeline" style="margin-top: 15px;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="trackError" style="display: none; color: #dc3545; text-align: center; margin-top: 20px; font-weight: 600;">
-                ❌ Complaint not found
-            </div>
-        </div>
-
-        <!-- View All Tab -->
-        <div id="view" class="tab-content">
-            <h2>All Complaints</h2>
-
-            <div class="filter-group">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search by ID, category, or name...">
-                </div>
-                <select id="filterStatus" onchange="filterComplaints()">
-                    <option value="">All Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="assigned">Assigned</option>
-                    <option value="progress">In Progress</option>
-                    <option value="resolved">Resolved</option>
-                    <option value="closed">Closed</option>
-                </select>
-                <select id="filterCategory" onchange="filterComplaints()">
-                    <option value="">All Categories</option>
-                    <option value="classroom">Classroom Equipment</option>
-                    <option value="wifi">Wi-Fi Problem</option>
-                    <option value="electricity">Electricity</option>
-                    <option value="hostel">Hostel</option>
-                    <option value="cleanliness">Cleanliness</option>
-                    <option value="lab">Lab Equipment</option>
-                </select>
-            </div>
-
-            <div class="complaint-list" id="complaintsList">
-                <div class="empty-state">
-                    <p>No complaints to display</p>
-                </div>
-            </div>
-        </div>
+    <div class="header">
+        <h1>🏛️ Complaint Tracking System</h1>
+        <p>Centurion University of Technology and Management</p>
     </div>
 
-    <script>
-        // Data storage (using localStorage for persistence)
-        const STORAGE_KEY = 'centurion_complaints';
+    <div class="nav-tabs">
+        <button class="tab-btn active" data-tab="student">
+            📝 Student Portal
+        </button>
 
-        // Tab switching
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                
-                this.classList.add('active');
-                document.getElementById(this.dataset.tab).classList.add('active');
-            });
-        });
+        <button class="tab-btn" data-tab="track">
+            🔍 Track Complaint
+        </button>
 
-        // File upload handling
-        const uploadArea = document.getElementById('uploadArea');
-        const photoInput = document.getElementById('photoUpload');
-        const filePreview = document.getElementById('filePreview');
-        const previewImg = document.getElementById('previewImg');
+        <button class="tab-btn" data-tab="view">
+            📊 View All
+        </button>
+    </div>
 
-        uploadArea.addEventListener('click', () => photoInput.click());
 
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, preventDefaults, false);
-        });
+    <!-- ================= STUDENT PORTAL ================= -->
 
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+    <div id="student" class="tab-content active">
 
-        ['dragenter', 'dragover'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, () => {
-                uploadArea.classList.add('drag-over');
-            });
-        });
+        <h2>Submit a Complaint</h2>
 
-        ['dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, () => {
-                uploadArea.classList.remove('drag-over');
-            });
-        });
+        <div class="success-message" id="successMsg">
+            ✓ Complaint submitted successfully!
+            Your complaint ID is:
+            <strong id="complaintId"></strong>
+        </div>
 
-        uploadArea.addEventListener('drop', (e) => {
-            const files = e.dataTransfer.files;
-            photoInput.files = files;
-            handleFileSelect();
-        });
+        <div class="error-message" id="submitError"></div>
 
-        photoInput.addEventListener('change', handleFileSelect);
+        <form id="complaintForm">
 
-        function handleFileSelect() {
-            if (photoInput.files && photoInput.files[0]) {
-                const file = photoInput.files[0];
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('File size must be less than 5MB');
-                    photoInput.value = '';
-                    return;
+            <div class="form-group">
+                <label for="studentName">
+                    Student Name *
+                </label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    required
+                    placeholder="Enter your full name"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="studentEmail">
+                    Email ID *
+                </label>
+
+                <input
+                    type="email"
+                    id="studentEmail"
+                    required
+                    placeholder="your.email@centurion.ac.in"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="studentPhone">
+                    Phone Number *
+                </label>
+
+                <input
+                    type="tel"
+                    id="studentPhone"
+                    required
+                    placeholder="9876543210"
+                >
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="complaintCategory">
+                    Complaint Category *
+                </label>
+
+                <select id="complaintCategory" required>
+
+                    <option value="">
+                        -- Select Category --
+                    </option>
+
+                    <option value="classroom">
+                        🚪 Classroom Equipment Problem
+                    </option>
+
+                    <option value="wifi">
+                        📡 Wi-Fi Problem
+                    </option>
+
+                    <option value="electricity">
+                        ⚡ Electricity Problem
+                    </option>
+
+                    <option value="hostel">
+                        🏠 Hostel Problem
+                    </option>
+
+                    <option value="cleanliness">
+                        🧹 Cleanliness Problem
+                    </option>
+
+                    <option value="lab">
+                        🔬 Lab Equipment Problem
+                    </option>
+
+                    <option value="other">
+                        📌 Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="complaintDescription">
+                    Description *
+                </label>
+
+                <textarea
+                    id="complaintDescription"
+                    required
+                    placeholder="Describe your complaint in detail..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Upload Photo (Optional)
+                </label>
+
+                <div
+                    class="file-upload-area"
+                    id="uploadArea"
+                >
+
+                    <p>
+                        📤 Click to upload or drag and drop
+                    </p>
+
+                    <small>
+                        PNG, JPG, GIF up to 5MB
+                    </small>
+
+                    <input
+                        type="file"
+                        id="photoUpload"
+                        accept="image/*"
+                    >
+
+                </div>
+
+
+                <div
+                    class="file-preview"
+                    id="filePreview"
+                >
+
+                    <p>📷 Preview:</p>
+
+                    <img
+                        id="previewImg"
+                        src=""
+                        alt="Preview"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn-submit"
+                id="submitButton"
+            >
+                Submit Complaint
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================= TRACK COMPLAINT ================= -->
+
+    <div id="track" class="tab-content">
+
+        <h2>Track Your Complaint</h2>
+
+        <div
+            class="form-group"
+            style="max-width:500px;margin:30px 0;"
+        >
+
+            <label for="trackId">
+                Enter Complaint ID
+            </label>
+
+            <input
+                type="text"
+                id="trackId"
+                placeholder="e.g., CU-001-2026"
+                style="margin-bottom:10px;"
+            >
+
+            <button
+                class="btn-submit"
+                onclick="searchComplaint()"
+            >
+                Search
+            </button>
+
+        </div>
+
+
+        <div
+            id="trackResult"
+            style="display:none;margin-top:30px;"
+        >
+
+            <div class="complaint-card">
+
+                <h3 id="trackComplaintTitle"></h3>
+
+                <p>
+                    <strong>Complaint ID:</strong>
+                    <span id="trackComplaintId"></span>
+                </p>
+
+                <p>
+                    <strong>Category:</strong>
+                    <span id="trackComplaintCategory"></span>
+                </p>
+
+                <p>
+                    <strong>Description:</strong>
+                    <span id="trackComplaintDesc"></span>
+                </p>
+
+                <p>
+                    <strong>Submitted Date:</strong>
+                    <span id="trackComplaintDate"></span>
+                </p>
+
+                <div class="complaint-meta">
+
+                    <span
+                        class="status-badge"
+                        id="trackStatusBadge"
+                    ></span>
+
+                    <span
+                        class="date-info"
+                        id="trackLastUpdate"
+                    ></span>
+
+                </div>
+
+
+                <div
+                    style="
+                    margin-top:20px;
+                    padding-top:20px;
+                    border-top:1px solid #e0e0e0;
+                    "
+                >
+
+                    <h4>Status Timeline:</h4>
+
+                    <div
+                        id="timeline"
+                        style="margin-top:15px;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="trackError"
+            style="
+            display:none;
+            color:#dc3545;
+            text-align:center;
+            margin-top:20px;
+            font-weight:600;
+            "
+        >
+            ❌ Complaint not found
+        </div>
+
+    </div>
+
+
+    <!-- ================= VIEW ALL ================= -->
+
+    <div id="view" class="tab-content">
+
+        <h2>All Complaints</h2>
+
+        <div class="admin-info">
+            🔐 <strong>Admin Access Required</strong>
+            <br>
+            Only authorized administrators can view all complaints.
+        </div>
+
+
+        <div class="filter-group">
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search by ID, category, or name..."
+                >
+
+            </div>
+
+
+            <select
+                id="filterStatus"
+            >
+
+                <option value="">
+                    All Status
+                </option>
+
+                <option value="pending">
+                    Pending
+                </option>
+
+                <option value="assigned">
+                    Assigned
+                </option>
+
+                <option value="progress">
+                    In Progress
+                </option>
+
+                <option value="resolved">
+                    Resolved
+                </option>
+
+                <option value="closed">
+                    Closed
+                </option>
+
+            </select>
+
+
+            <select
+                id="filterCategory"
+            >
+
+                <option value="">
+                    All Categories
+                </option>
+
+                <option value="classroom">
+                    Classroom Equipment
+                </option>
+
+                <option value="wifi">
+                    Wi-Fi Problem
+                </option>
+
+                <option value="electricity">
+                    Electricity
+                </option>
+
+                <option value="hostel">
+                    Hostel
+                </option>
+
+                <option value="cleanliness">
+                    Cleanliness
+                </option>
+
+                <option value="lab">
+                    Lab Equipment
+                </option>
+
+                <option value="other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div
+            class="complaint-list"
+            id="complaintsList"
+        >
+
+            <div class="empty-state">
+                <p>
+                    Click "View All" again to load complaints.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =====================================================
+       LIVE RENDER BACKEND
+       ===================================================== */
+
+    const API_BASE =
+        "https://college-complain-backend.onrender.com/api";
+
+
+    /* =====================================================
+       GLOBAL ADMIN TOKEN
+       ===================================================== */
+
+    let adminToken = null;
+
+    let allComplaints = [];
+
+
+    /* =====================================================
+       TAB SWITCHING
+       ===================================================== */
+
+    document
+        .querySelectorAll(".tab-btn")
+        .forEach(button => {
+
+            button.addEventListener("click", function () {
+
+                document
+                    .querySelectorAll(".tab-btn")
+                    .forEach(btn => {
+                        btn.classList.remove("active");
+                    });
+
+
+                document
+                    .querySelectorAll(".tab-content")
+                    .forEach(tab => {
+                        tab.classList.remove("active");
+                    });
+
+
+                this.classList.add("active");
+
+
+                document
+                    .getElementById(this.dataset.tab)
+                    .classList.add("active");
+
+
+                if (this.dataset.tab === "view") {
+
+                    loadComplaints();
+
                 }
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    previewImg.src = e.target.result;
-                    filePreview.classList.add('show');
-                };
-                reader.readAsDataURL(file);
+
+            });
+
+        });
+
+
+    /* =====================================================
+       FILE UPLOAD
+       ===================================================== */
+
+    const uploadArea =
+        document.getElementById("uploadArea");
+
+    const photoInput =
+        document.getElementById("photoUpload");
+
+    const filePreview =
+        document.getElementById("filePreview");
+
+    const previewImg =
+        document.getElementById("previewImg");
+
+
+    uploadArea.addEventListener(
+        "click",
+        () => photoInput.click()
+    );
+
+
+    [
+        "dragenter",
+        "dragover",
+        "dragleave",
+        "drop"
+    ].forEach(eventName => {
+
+        uploadArea.addEventListener(
+            eventName,
+            preventDefaults,
+            false
+        );
+
+    });
+
+
+    function preventDefaults(event) {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+    }
+
+
+    [
+        "dragenter",
+        "dragover"
+    ].forEach(eventName => {
+
+        uploadArea.addEventListener(
+            eventName,
+            () => {
+                uploadArea.classList.add("drag-over");
             }
+        );
+
+    });
+
+
+    [
+        "dragleave",
+        "drop"
+    ].forEach(eventName => {
+
+        uploadArea.addEventListener(
+            eventName,
+            () => {
+                uploadArea.classList.remove("drag-over");
+            }
+        );
+
+    });
+
+
+    uploadArea.addEventListener(
+        "drop",
+        event => {
+
+            const files =
+                event.dataTransfer.files;
+
+            if (files.length > 0) {
+
+                photoInput.files = files;
+
+                handleFileSelect();
+
+            }
+
+        }
+    );
+
+
+    photoInput.addEventListener(
+        "change",
+        handleFileSelect
+    );
+
+
+    function handleFileSelect() {
+
+        if (
+            !photoInput.files ||
+            !photoInput.files[0]
+        ) {
+            return;
         }
 
-        // Generate complaint ID
-        function generateComplaintId() {
-            const timestamp = Date.now().toString().slice(-6);
-            return `CU-${String(Object.keys(getComplaints()).length + 1).padStart(3, '0')}-2024`;
+
+        const file =
+            photoInput.files[0];
+
+
+        if (
+            file.size >
+            5 * 1024 * 1024
+        ) {
+
+            alert(
+                "File size must be less than 5MB."
+            );
+
+            photoInput.value = "";
+
+            filePreview.classList.remove("show");
+
+            return;
+
         }
 
-        // Get complaints from storage
-        function getComplaints() {
-            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+        if (
+            !file.type.startsWith("image/")
+        ) {
+
+            alert(
+                "Please select a valid image."
+            );
+
+            photoInput.value = "";
+
+            return;
+
         }
 
-        // Save complaints to storage
-        function saveComplaints(complaints) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(complaints));
-        }
 
-        // Form submission
-        document.getElementById('complaintForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        const reader =
+            new FileReader();
 
-            const complaintId = generateComplaintId();
-            const complaint = {
-                id: complaintId,
-                name: document.getElementById('studentName').value,
-                email: document.getElementById('studentEmail').value,
-                phone: document.getElementById('studentPhone').value,
-                category: document.getElementById('complaintCategory').value,
-                description: document.getElementById('complaintDescription').value,
-                photo: photoInput.files && photoInput.files[0] ? previewImg.src : null,
-                status: 'pending',
-                submittedDate: new Date().toLocaleDateString('en-IN'),
-                timeline: [
-                    {
-                        status: 'pending',
-                        date: new Date().toLocaleDateString('en-IN'),
-                        message: 'Complaint submitted'
-                    }
-                ]
+
+        reader.onload =
+            event => {
+
+                previewImg.src =
+                    event.target.result;
+
+                filePreview.classList.add(
+                    "show"
+                );
+
             };
 
-            const complaints = getComplaints();
-            complaints[complaintId] = complaint;
-            saveComplaints(complaints);
 
-            // Show success message
-            const successMsg = document.getElementById('successMsg');
-            document.getElementById('complaintId').textContent = complaintId;
-            successMsg.classList.add('show');
+        reader.readAsDataURL(file);
 
-            // Reset form
-            this.reset();
-            filePreview.classList.remove('show');
+    }
 
-            setTimeout(() => {
-                successMsg.classList.remove('show');
-            }, 5000);
-        });
 
-        // Search complaint
-        function searchComplaint() {
-            const searchId = document.getElementById('trackId').value.toUpperCase();
-            const complaints = getComplaints();
-            const complaint = complaints[searchId];
+    /* =====================================================
+       SUBMIT COMPLAINT
+       ===================================================== */
 
-            const trackResult = document.getElementById('trackResult');
-            const trackError = document.getElementById('trackError');
+    document
+        .getElementById("complaintForm")
+        .addEventListener(
+            "submit",
+            async function(event) {
 
-            if (complaint) {
-                document.getElementById('trackComplaintTitle').textContent = complaint.category.toUpperCase();
-                document.getElementById('trackComplaintId').textContent = complaint.id;
-                document.getElementById('trackComplaintCategory').textContent = complaint.category;
-                document.getElementById('trackComplaintDesc').textContent = complaint.description;
-                document.getElementById('trackComplaintDate').textContent = complaint.submittedDate;
-                document.getElementById('trackLastUpdate').textContent = `Last updated: ${complaint.submittedDate}`;
-                
-                const statusBadge = document.getElementById('trackStatusBadge');
-                statusBadge.textContent = complaint.status.toUpperCase();
-                statusBadge.className = `status-badge status-${complaint.status}`;
+                event.preventDefault();
 
-                // Timeline
-                const timeline = document.getElementById('timeline');
-                timeline.innerHTML = complaint.timeline.map((event, idx) => `
-                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                        <div style="text-align: center; flex-shrink: 0;">
-                            <div style="width: 30px; height: 30px; background: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${idx + 1}</div>
-                            ${idx < complaint.timeline.length - 1 ? '<div style="width: 2px; height: 20px; background: #e0e0e0; margin: 5px auto;"></div>' : ''}
-                        </div>
-                        <div>
-                            <p style="font-weight: 600; color: #333;">${event.status.toUpperCase()}</p>
-                            <p style="color: #666; font-size: 0.9em;">${event.message}</p>
-                            <p style="color: #999; font-size: 0.85em;">${event.date}</p>
-                        </div>
-                    </div>
-                `).join('');
 
-                trackResult.style.display = 'block';
-                trackError.style.display = 'none';
-            } else {
-                trackResult.style.display = 'none';
-                trackError.style.display = 'block';
-            }
-        }
+                const submitButton =
+                    document.getElementById(
+                        "submitButton"
+                    );
 
-        // Filter complaints
-        function filterComplaints() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const statusFilter = document.getElementById('filterStatus').value;
-            const categoryFilter = document.getElementById('filterCategory').value;
 
-            const complaints = getComplaints();
-            const filtered = Object.values(complaints).filter(complaint => {
-                const matchesSearch = !searchTerm || 
-                    complaint.id.toLowerCase().includes(searchTerm) ||
-                    complaint.category.toLowerCase().includes(searchTerm) ||
-                    complaint.name.toLowerCase().includes(searchTerm);
-                
-                const matchesStatus = !statusFilter || complaint.status === statusFilter;
-                const matchesCategory = !categoryFilter || complaint.category === categoryFilter;
+                const errorBox =
+                    document.getElementById(
+                        "submitError"
+                    );
 
-                return matchesSearch && matchesStatus && matchesCategory;
-            });
 
-            displayComplaints(filtered);
-        }
+                const successBox =
+                    document.getElementById(
+                        "successMsg"
+                    );
 
-        // Display complaints
-        function displayComplaints(complaints) {
-            const complaintsList = document.getElementById('complaintsList');
 
-            if (complaints.length === 0) {
-                complaintsList.innerHTML = '<div class="empty-state"><p>No complaints to display</p></div>';
-                return;
-            }
+                errorBox.classList.remove(
+                    "show"
+                );
 
-            complaintsList.innerHTML = complaints.map(complaint => `
-                <div class="complaint-card">
-                    <h3>${complaint.id}</h3>
-                    <p><strong>Name:</strong> ${complaint.name}</p>
-                    <p><strong>Category:</strong> ${complaint.category}</p>
-                    <p><strong>Description:</strong> ${complaint.description.substring(0, 100)}...</p>
-                    <div class="complaint-meta">
-                        <span class="status-badge status-${complaint.status}">${complaint.status.toUpperCase()}</span>
-                        <span class="date-info">${complaint.submittedDate}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
 
-        // Search box live filtering
-        document.getElementById('searchInput').addEventListener('keyup', filterComplaints);
+                successBox.classList.remove(
+                    "show"
+                );
 
-        // Load initial complaints on view tab
-        setTimeout(() => {
-            filterComplaints();
-        }, 500);
 
-        // Initialize with sample data for demo
-        function initializeSampleData() {
-            const complaints = getComplaints();
-            if (Object.keys(complaints).length === 0) {
-                const sampleComplaints = {
-                    'CU-001-2024': {
-                        id: 'CU-001-2024',
-                        name: 'Arjun Singh',
-                        email: 'arjun@centurion.ac.in',
-                        phone: '9876543210',
-                        category: 'classroom',
-                        description: 'Projector in classroom A201 is not working properly. It flickers constantly.',
-                        photo: null,
-                        status: 'resolved',
-                        submittedDate: '2024-01-15',
-                        timeline: [
-                            { status: 'pending', date: '2024-01-15', message: 'Complaint submitted' },
-                            { status: 'assigned', date: '2024-01-15', message: 'Assigned to Maintenance Department' },
-                            { status: 'progress', date: '2024-01-16', message: 'Work in progress' },
-                            { status: 'resolved', date: '2024-01-17', message: 'Issue resolved - Projector replaced' }
-                        ]
-                    },
-                    'CU-002-2024': {
-                        id: 'CU-002-2024',
-                        name: 'Priya Sharma',
-                        email: 'priya@centurion.ac.in',
-                        phone: '9876543211',
-                        category: 'wifi',
-                        description: 'WiFi connectivity issues in hostel block C. Signal is very weak.',
-                        photo: null,
-                        status: 'progress',
-                        submittedDate: '2024-01-18',
-                        timeline: [
-                            { status: 'pending', date: '2024-01-18', message: 'Complaint submitted' },
-                            { status: 'assigned', date: '2024-01-18', message: 'Assigned to IT Department' },
-                            { status: 'progress', date: '2024-01-19', message: 'Signal booster installation in progress' }
-                        ]
-                    },
-                    'CU-003-2024': {
-                        id: 'CU-003-2024',
-                        name: 'Rahul Kumar',
-                        email: 'rahul@centurion.ac.in',
-                        phone: '9876543212',
-                        category: 'cleanliness',
-                        description: 'Washrooms in block D are not being cleaned regularly. Very unhygienic conditions.',
-                        photo: null,
-                        status: 'pending',
-                        submittedDate: '2024-01-20',
-                        timeline: [
-                            { status: 'pending', date: '2024-01-20', message: 'Complaint submitted' }
-                        ]
+                submitButton.disabled = true;
+
+                submitButton.textContent =
+                    "Submitting...";
+
+
+                try {
+
+                    const formData =
+                        new FormData();
+
+
+                    formData.append(
+                        "name",
+                        document
+                            .getElementById(
+                                "studentName"
+                            )
+                            .value
+                            .trim()
+                    );
+
+
+                    formData.append(
+                        "email",
+                        document
+                            .getElementById(
+                                "studentEmail"
+                            )
+                            .value
+                            .trim()
+                    );
+
+
+                    formData.append(
+                        "phone",
+                        document
+                            .getElementById(
+                                "studentPhone"
+                            )
+                            .value
+                            .trim()
+                    );
+
+
+                    formData.append(
+                        "category",
+                        document
+                            .getElementById(
+                                "complaintCategory"
+                            )
+                            .value
+                    );
+
+
+                    formData.append(
+                        "description",
+                        document
+                            .getElementById(
+                                "complaintDescription"
+                            )
+                            .value
+                            .trim()
+                    );
+
+
+                    if (
+                        photoInput.files &&
+                        photoInput.files.length > 0
+                    ) {
+
+                        formData.append(
+                            "photo",
+                            photoInput.files[0]
+                        );
+
                     }
-                };
-                saveComplaints(sampleComplaints);
+
+
+                    const response =
+                        await fetch(
+                            `${API_BASE}/complaints`,
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.message ||
+                            "Complaint submission failed."
+                        );
+
+                    }
+
+
+                    const complaint =
+                        data.complaint ||
+                        data.data ||
+                        data;
+
+
+                    const complaintId =
+                        complaint.id ||
+                        complaint.complaintId ||
+                        data.complaintId;
+
+
+                    document
+                        .getElementById(
+                            "complaintId"
+                        )
+                        .textContent =
+                            complaintId ||
+                            "Generated";
+
+
+                    successBox.classList.add(
+                        "show"
+                    );
+
+
+                    this.reset();
+
+
+                    filePreview.classList.remove(
+                        "show"
+                    );
+
+
+                    previewImg.src = "";
+
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+
+
+                    setTimeout(
+                        () => {
+                            successBox.classList.remove(
+                                "show"
+                            );
+                        },
+                        7000
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Submission error:",
+                        error
+                    );
+
+
+                    errorBox.textContent =
+                        "❌ " +
+                        error.message;
+
+
+                    errorBox.classList.add(
+                        "show"
+                    );
+
+                } finally {
+
+                    submitButton.disabled = false;
+
+                    submitButton.textContent =
+                        "Submit Complaint";
+
+                }
+
             }
+        );
+
+
+    /* =====================================================
+       TRACK COMPLAINT
+       ===================================================== */
+
+    async function searchComplaint() {
+
+        const searchId =
+            document
+                .getElementById("trackId")
+                .value
+                .trim()
+                .toUpperCase();
+
+
+        const resultBox =
+            document.getElementById(
+                "trackResult"
+            );
+
+
+        const errorBox =
+            document.getElementById(
+                "trackError"
+            );
+
+
+        resultBox.style.display =
+            "none";
+
+
+        errorBox.style.display =
+            "none";
+
+
+        if (!searchId) {
+
+            errorBox.textContent =
+                "❌ Please enter a Complaint ID.";
+
+            errorBox.style.display =
+                "block";
+
+            return;
+
         }
 
-        initializeSampleData();
-    </script>
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE}/complaints/${encodeURIComponent(searchId)}`
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    "Complaint not found."
+                );
+
+            }
+
+
+            const complaint =
+                data.complaint ||
+                data.data ||
+                data;
+
+
+            document
+                .getElementById(
+                    "trackComplaintTitle"
+                )
+                .textContent =
+                    (
+                        complaint.category ||
+                        "Complaint"
+                    ).toUpperCase();
+
+
+            document
+                .getElementById(
+                    "trackComplaintId"
+                )
+                .textContent =
+                    complaint.id ||
+                    complaint.complaintId ||
+                    searchId;
+
+
+            document
+                .getElementById(
+                    "trackComplaintCategory"
+                )
+                .textContent =
+                    complaint.category ||
+                    "-";
+
+
+            document
+                .getElementById(
+                    "trackComplaintDesc"
+                )
+                .textContent =
+                    complaint.description ||
+                    "-";
+
+
+            const submittedDate =
+                complaint.submittedDate ||
+                formatDate(
+                    complaint.createdAt
+                );
+
+
+            document
+                .getElementById(
+                    "trackComplaintDate"
+                )
+                .textContent =
+                    submittedDate;
+
+
+            document
+                .getElementById(
+                    "trackLastUpdate"
+                )
+                .textContent =
+                    "Last updated: " +
+                    formatDate(
+                        complaint.updatedAt ||
+                        complaint.createdAt
+                    );
+
+
+            const status =
+                complaint.status ||
+                "pending";
+
+
+            const badge =
+                document.getElementById(
+                    "trackStatusBadge"
+                );
+
+
+            badge.textContent =
+                status.toUpperCase();
+
+
+            badge.className =
+                "status-badge status-" +
+                status;
+
+
+            /* Timeline */
+
+            const timeline =
+                document.getElementById(
+                    "timeline"
+                );
+
+
+            const events =
+                Array.isArray(
+                    complaint.timeline
+                )
+                    ? complaint.timeline
+                    : [
+                        {
+                            status:
+                                status,
+                            date:
+                                submittedDate,
+                            message:
+                                "Complaint submitted"
+                        }
+                    ];
+
+
+            timeline.innerHTML =
+                events
+                    .map(
+                        (event, index) => {
+
+                            return `
+
+                            <div
+                                style="
+                                display:flex;
+                                gap:15px;
+                                margin-bottom:18px;
+                                "
+                            >
+
+                                <div
+                                    style="
+                                    width:30px;
+                                    height:30px;
+                                    min-width:30px;
+                                    background:#667eea;
+                                    border-radius:50%;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    color:white;
+                                    font-weight:bold;
+                                    "
+                                >
+                                    ${index + 1}
+                                </div>
+
+                                <div>
+
+                                    <p
+                                        style="
+                                        font-weight:600;
+                                        color:#333;
+                                        margin-bottom:4px;
+                                        "
+                                    >
+                                        ${escapeHtml(
+                                            (
+                                                event.status ||
+                                                ""
+                                            ).toUpperCase()
+                                        )}
+                                    </p>
+
+                                    <p
+                                        style="
+                                        color:#666;
+                                        font-size:.9em;
+                                        "
+                                    >
+                                        ${escapeHtml(
+                                            event.message ||
+                                            ""
+                                        )}
+                                    </p>
+
+                                    <p
+                                        style="
+                                        color:#999;
+                                        font-size:.85em;
+                                        "
+                                    >
+                                        ${escapeHtml(
+                                            event.date ||
+                                            ""
+                                        )}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+
+            resultBox.style.display =
+                "block";
+
+
+        } catch (error) {
+
+            console.error(
+                "Track error:",
+                error
+            );
+
+
+            errorBox.textContent =
+                "❌ " +
+                error.message;
+
+
+            errorBox.style.display =
+                "block";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       ADMIN LOGIN + VIEW ALL
+       ===================================================== */
+
+    async function loadComplaints() {
+
+        const list =
+            document.getElementById(
+                "complaintsList"
+            );
+
+
+        list.innerHTML = `
+            <div class="loading">
+                Loading complaints...
+            </div>
+        `;
+
+
+        try {
+
+            let email =
+                sessionStorage.getItem(
+                    "adminEmail"
+                );
+
+
+            let password =
+                sessionStorage.getItem(
+                    "adminPassword"
+                );
+
+
+            /*
+             * Ask login only when token
+             * is not already available.
+             */
+
+            if (!adminToken) {
+
+                email =
+                    prompt(
+                        "Enter Admin Email:"
+                    );
+
+
+                if (!email) {
+
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <p>Admin login cancelled.</p>
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                password =
+                    prompt(
+                        "Enter Admin Password:"
+                    );
+
+
+                if (!password) {
+
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <p>Admin login cancelled.</p>
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                const loginResponse =
+                    await fetch(
+                        `${API_BASE}/auth/login`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    email:
+                                        email,
+                                    password:
+                                        password
+                                })
+                        }
+                    );
+
+
+                const loginData =
+                    await loginResponse.json();
+
+
+                if (!loginResponse.ok) {
+
+                    throw new Error(
+                        loginData.message ||
+                        "Invalid admin credentials."
+                    );
+
+                }
+
+
+                adminToken =
+                    loginData.token ||
+                    loginData.accessToken;
+
+
+                if (!adminToken) {
+
+                    throw new Error(
+                        "Admin token was not returned by server."
+                    );
+
+                }
+
+            }
+
+
+            const response =
+                await fetch(
+                    `${API_BASE}/complaints`,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "Authorization":
+                                `Bearer ${adminToken}`
+                        }
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                if (
+                    response.status === 401 ||
+                    response.status === 403
+                ) {
+
+                    adminToken = null;
+
+                }
+
+                throw new Error(
+                    data.message ||
+                    "Unable to load complaints."
+                );
+
+            }
+
+
+            allComplaints =
+                data.complaints ||
+                data.data ||
+                data ||
+                [];
+
+
+            if (!Array.isArray(allComplaints)) {
+
+                allComplaints = [];
+
+            }
+
+
+            displayComplaints(
+                allComplaints
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Admin error:",
+                error
+            );
+
+
+            list.innerHTML = `
+                <div class="empty-state">
+
+                    <p>
+                        ❌ ${escapeHtml(
+                            error.message
+                        )}
+                    </p>
+
+                </div>
+            `;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       FILTER COMPLAINTS
+       ===================================================== */
+
+    function filterComplaints() {
+
+        const searchTerm =
+            document
+                .getElementById(
+                    "searchInput"
+                )
+                .value
+                .toLowerCase()
+                .trim();
+
+
+        const statusFilter =
+            document
+                .getElementById(
+                    "filterStatus"
+                )
+                .value;
+
+
+        const categoryFilter =
+            document
+                .getElementById(
+                    "filterCategory"
+                )
+                .value;
+
+
+        const filtered =
+            allComplaints.filter(
+                complaint => {
+
+                    const id =
+                        String(
+                            complaint.id ||
+                            complaint.complaintId ||
+                            ""
+                        ).toLowerCase();
+
+
+                    const name =
+                        String(
+                            complaint.name ||
+                            ""
+                        ).toLowerCase();
+
+
+                    const category =
+                        String(
+                            complaint.category ||
+                            ""
+                        ).toLowerCase();
+
+
+                    const matchesSearch =
+                        !searchTerm ||
+                        id.includes(searchTerm) ||
+                        name.includes(searchTerm) ||
+                        category.includes(searchTerm);
+
+
+                    const matchesStatus =
+                        !statusFilter ||
+                        complaint.status ===
+                            statusFilter;
+
+
+                    const matchesCategory =
+                        !categoryFilter ||
+                        complaint.category ===
+                            categoryFilter;
+
+
+                    return (
+                        matchesSearch &&
+                        matchesStatus &&
+                        matchesCategory
+                    );
+
+                }
+            );
+
+
+        displayComplaints(
+            filtered
+        );
+
+    }
+
+
+    /* =====================================================
+       DISPLAY COMPLAINTS
+       ===================================================== */
+
+    function displayComplaints(
+        complaints
+    ) {
+
+        const list =
+            document.getElementById(
+                "complaintsList"
+            );
+
+
+        if (
+            !complaints ||
+            complaints.length === 0
+        ) {
+
+            list.innerHTML = `
+                <div class="empty-state">
+                    <p>
+                        No complaints to display.
+                    </p>
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        list.innerHTML =
+            complaints
+                .map(
+                    complaint => {
+
+                        const id =
+                            complaint.id ||
+                            complaint.complaintId ||
+                            "";
+
+
+                        const name =
+                            complaint.name ||
+                            "";
+
+
+                        const category =
+                            complaint.category ||
+                            "";
+
+
+                        const description =
+                            complaint.description ||
+                            "";
+
+
+                        const status =
+                            complaint.status ||
+                            "pending";
+
+
+                        const date =
+                            complaint.submittedDate ||
+                            formatDate(
+                                complaint.createdAt
+                            );
+
+
+                        return `
+
+                        <div
+                            class="complaint-card"
+                        >
+
+                            <h3>
+                                ${escapeHtml(id)}
+                            </h3>
+
+
+                            <p>
+                                <strong>
+                                    Name:
+                                </strong>
+
+                                ${escapeHtml(name)}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Category:
+                                </strong>
+
+                                ${escapeHtml(category)}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Description:
+                                </strong>
+
+                                ${escapeHtml(
+                                    description.substring(
+                                        0,
+                                        120
+                                    )
+                                )}
+
+                                ${
+                                    description.length > 120
+                                        ? "..."
+                                        : ""
+                                }
+
+                            </p>
+
+
+                            <div
+                                class="complaint-meta"
+                            >
+
+                                <span
+                                    class="
+                                    status-badge
+                                    status-${escapeHtml(
+                                        status
+                                    )}
+                                    "
+                                >
+                                    ${escapeHtml(
+                                        status.toUpperCase()
+                                    )}
+                                </span>
+
+
+                                <span
+                                    class="date-info"
+                                >
+                                    ${escapeHtml(date)}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        `;
+
+                    }
+                )
+                .join("");
+
+    }
+
+
+    /* =====================================================
+       SEARCH + FILTER EVENTS
+       ===================================================== */
+
+    document
+        .getElementById(
+            "searchInput"
+        )
+        .addEventListener(
+            "input",
+            filterComplaints
+        );
+
+
+    document
+        .getElementById(
+            "filterStatus"
+        )
+        .addEventListener(
+            "change",
+            filterComplaints
+        );
+
+
+    document
+        .getElementById(
+            "filterCategory"
+        )
+        .addEventListener(
+            "change",
+            filterComplaints
+        );
+
+
+    /* =====================================================
+       ENTER KEY FOR TRACKING
+       ===================================================== */
+
+    document
+        .getElementById(
+            "trackId"
+        )
+        .addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    searchComplaint();
+
+                }
+
+            }
+        );
+
+
+    /* =====================================================
+       DATE FORMAT
+       ===================================================== */
+
+    function formatDate(date) {
+
+        if (!date) {
+            return "-";
+        }
+
+
+        try {
+
+            return new Date(
+                date
+            ).toLocaleDateString(
+                "en-IN"
+            );
+
+        } catch {
+
+            return String(date);
+
+        }
+
+    }
+
+
+    /* =====================================================
+       HTML SECURITY
+       ===================================================== */
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+</script>
+
 </body>
 </html>
