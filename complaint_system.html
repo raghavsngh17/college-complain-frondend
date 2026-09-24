@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centurion University - Complaint Tracking System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-tabs button {
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tabs button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-tabs button.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .file-upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .file-upload-area:hover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+
+        .file-upload-area.drag-over {
+            background: #e8edff;
+            border-color: #764ba2;
+            transform: scale(1.02);
+        }
+
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-area p {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-area small {
+            color: #999;
+            display: block;
+        }
+
+        .file-preview {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0f4ff;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .file-preview.show {
+            display: block;
+        }
+
+        .file-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 5px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .complaint-list {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        }
+
+        .complaint-card {
+            background: #f9f9f9;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .complaint-card:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .complaint-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .complaint-card p {
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .complaint-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-assigned {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-progress {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-resolved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-closed {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .date-info {
+            font-size: 0.9em;
+            color: #999;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #28a745;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            grid-column: 1 / -1;
+        }
+
+        .search-box input {
+            width: 100%;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .nav-tabs {
+                gap: 5px;
+            }
+
+            .nav-tabs button {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+
+            .complaint-list {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Complaint Tracking System</h1>
+            <p>Centurion University of Technology and Management</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="student">📝 Student Portal</button>
+            <button class="tab-btn" data-tab="track">🔍 Track Complaint</button>
+            <button class="tab-btn" data-tab="view">📊 View All</button>
+        </div>
+
+        <!-- Student Portal Tab -->
+        <div id="student" class="tab-content active">
+            <h2>Submit a Complaint</h2>
+            <div class="success-message" id="successMsg">
+                ✓ Complaint submitted successfully! Your complaint ID is: <span id="complaintId"></span>
+            </div>
+
+            <form id="complaintForm">
+                <div class="form-group">
+                    <label for="studentName">Student Name *</label>
+                    <input type="text" id="studentName" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="studentEmail">Email ID *</label>
+                    <input type="email" id="studentEmail" required placeholder="your.email@centurion.ac.in">
+                </div>
+
+                <div class="form-group">
+                    <label for="studentPhone">Phone Number *</label>
+                    <input type="tel" id="studentPhone" required placeholder="9876543210">
+                </div>
+
+                <div class="form-group">
+                    <label for="complaintCategory">Complaint Category *</label>
+                    <select id="complaintCategory" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="classroom">🚪 Classroom Equipment Problem</option>
+                        <option value="wifi">📡 Wi-Fi Problem</option>
+                        <option value="electricity">⚡ Electricity Problem</option>
+                        <option value="hostel">🏠 Hostel Problem</option>
+                        <option value="cleanliness">🧹 Cleanliness Problem</option>
+                        <option value="lab">🔬 Lab Equipment Problem</option>
+                        <option value="other">📌 Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="complaintDescription">Description *</label>
+                    <textarea id="complaintDescription" required placeholder="Describe your complaint in detail..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Photo (Optional)</label>
+                    <div class="file-upload-area" id="uploadArea">
+                        <p>📤 Click to upload or drag and drop</p>
+                        <small>PNG, JPG, GIF up to 5MB</small>
+                        <input type="file" id="photoUpload" accept="image/*">
+                    </div>
+                    <div class="file-preview" id="filePreview">
+                        <p>📷 Preview:</p>
+                        <img id="previewImg" src="" alt="Preview">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Submit Complaint</button>
+            </form>
+        </div>
+
+        <!-- Track Complaint Tab -->
+        <div id="track" class="tab-content">
+            <h2>Track Your Complaint</h2>
+            <div class="form-group" style="max-width: 500px; margin: 30px 0;">
+                <label for="trackId">Enter Complaint ID</label>
+                <input type="text" id="trackId" placeholder="e.g., CU-001-2024" style="margin-bottom: 10px;">
+                <button class="btn-submit" onclick="searchComplaint()">Search</button>
+            </div>
+
+            <div id="trackResult" style="display: none; margin-top: 30px;">
+                <div class="complaint-card">
+                    <h3 id="trackComplaintTitle"></h3>
+                    <p><strong>Complaint ID:</strong> <span id="trackComplaintId"></span></p>
+                    <p><strong>Category:</strong> <span id="trackComplaintCategory"></span></p>
+                    <p><strong>Description:</strong> <span id="trackComplaintDesc"></span></p>
+                    <p><strong>Submitted Date:</strong> <span id="trackComplaintDate"></span></p>
+                    <div class="complaint-meta">
+                        <span class="status-badge" id="trackStatusBadge"></span>
+                        <span class="date-info" id="trackLastUpdate"></span>
+                    </div>
+
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+                        <h4>Status Timeline:</h4>
+                        <div id="timeline" style="margin-top: 15px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="trackError" style="display: none; color: #dc3545; text-align: center; margin-top: 20px; font-weight: 600;">
+                ❌ Complaint not found
+            </div>
+        </div>
+
+        <!-- View All Tab -->
+        <div id="view" class="tab-content">
+            <h2>All Complaints</h2>
+
+            <div class="filter-group">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by ID, category, or name...">
+                </div>
+                <select id="filterStatus" onchange="filterComplaints()">
+                    <option value="">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="assigned">Assigned</option>
+                    <option value="progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                </select>
+                <select id="filterCategory" onchange="filterComplaints()">
+                    <option value="">All Categories</option>
+                    <option value="classroom">Classroom Equipment</option>
+                    <option value="wifi">Wi-Fi Problem</option>
+                    <option value="electricity">Electricity</option>
+                    <option value="hostel">Hostel</option>
+                    <option value="cleanliness">Cleanliness</option>
+                    <option value="lab">Lab Equipment</option>
+                </select>
+            </div>
+
+            <div class="complaint-list" id="complaintsList">
+                <div class="empty-state">
+                    <p>No complaints to display</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage (using localStorage for persistence)
+        const STORAGE_KEY = 'centurion_complaints';
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // File upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const photoInput = document.getElementById('photoUpload');
+        const filePreview = document.getElementById('filePreview');
+        const previewImg = document.getElementById('previewImg');
+
+        uploadArea.addEventListener('click', () => photoInput.click());
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.classList.add('drag-over');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.classList.remove('drag-over');
+            });
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            photoInput.files = files;
+            handleFileSelect();
+        });
+
+        photoInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect() {
+            if (photoInput.files && photoInput.files[0]) {
+                const file = photoInput.files[0];
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    photoInput.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    filePreview.classList.add('show');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Generate complaint ID
+        function generateComplaintId() {
+            const timestamp = Date.now().toString().slice(-6);
+            return `CU-${String(Object.keys(getComplaints()).length + 1).padStart(3, '0')}-2024`;
+        }
+
+        // Get complaints from storage
+        function getComplaints() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        }
+
+        // Save complaints to storage
+        function saveComplaints(complaints) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(complaints));
+        }
+
+        // Form submission
+        document.getElementById('complaintForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const complaintId = generateComplaintId();
+            const complaint = {
+                id: complaintId,
+                name: document.getElementById('studentName').value,
+                email: document.getElementById('studentEmail').value,
+                phone: document.getElementById('studentPhone').value,
+                category: document.getElementById('complaintCategory').value,
+                description: document.getElementById('complaintDescription').value,
+                photo: photoInput.files && photoInput.files[0] ? previewImg.src : null,
+                status: 'pending',
+                submittedDate: new Date().toLocaleDateString('en-IN'),
+                timeline: [
+                    {
+                        status: 'pending',
+                        date: new Date().toLocaleDateString('en-IN'),
+                        message: 'Complaint submitted'
+                    }
+                ]
+            };
+
+            const complaints = getComplaints();
+            complaints[complaintId] = complaint;
+            saveComplaints(complaints);
+
+            // Show success message
+            const successMsg = document.getElementById('successMsg');
+            document.getElementById('complaintId').textContent = complaintId;
+            successMsg.classList.add('show');
+
+            // Reset form
+            this.reset();
+            filePreview.classList.remove('show');
+
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 5000);
+        });
+
+        // Search complaint
+        function searchComplaint() {
+            const searchId = document.getElementById('trackId').value.toUpperCase();
+            const complaints = getComplaints();
+            const complaint = complaints[searchId];
+
+            const trackResult = document.getElementById('trackResult');
+            const trackError = document.getElementById('trackError');
+
+            if (complaint) {
+                document.getElementById('trackComplaintTitle').textContent = complaint.category.toUpperCase();
+                document.getElementById('trackComplaintId').textContent = complaint.id;
+                document.getElementById('trackComplaintCategory').textContent = complaint.category;
+                document.getElementById('trackComplaintDesc').textContent = complaint.description;
+                document.getElementById('trackComplaintDate').textContent = complaint.submittedDate;
+                document.getElementById('trackLastUpdate').textContent = `Last updated: ${complaint.submittedDate}`;
+                
+                const statusBadge = document.getElementById('trackStatusBadge');
+                statusBadge.textContent = complaint.status.toUpperCase();
+                statusBadge.className = `status-badge status-${complaint.status}`;
+
+                // Timeline
+                const timeline = document.getElementById('timeline');
+                timeline.innerHTML = complaint.timeline.map((event, idx) => `
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                        <div style="text-align: center; flex-shrink: 0;">
+                            <div style="width: 30px; height: 30px; background: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${idx + 1}</div>
+                            ${idx < complaint.timeline.length - 1 ? '<div style="width: 2px; height: 20px; background: #e0e0e0; margin: 5px auto;"></div>' : ''}
+                        </div>
+                        <div>
+                            <p style="font-weight: 600; color: #333;">${event.status.toUpperCase()}</p>
+                            <p style="color: #666; font-size: 0.9em;">${event.message}</p>
+                            <p style="color: #999; font-size: 0.85em;">${event.date}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                trackResult.style.display = 'block';
+                trackError.style.display = 'none';
+            } else {
+                trackResult.style.display = 'none';
+                trackError.style.display = 'block';
+            }
+        }
+
+        // Filter complaints
+        function filterComplaints() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('filterStatus').value;
+            const categoryFilter = document.getElementById('filterCategory').value;
+
+            const complaints = getComplaints();
+            const filtered = Object.values(complaints).filter(complaint => {
+                const matchesSearch = !searchTerm || 
+                    complaint.id.toLowerCase().includes(searchTerm) ||
+                    complaint.category.toLowerCase().includes(searchTerm) ||
+                    complaint.name.toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = !statusFilter || complaint.status === statusFilter;
+                const matchesCategory = !categoryFilter || complaint.category === categoryFilter;
+
+                return matchesSearch && matchesStatus && matchesCategory;
+            });
+
+            displayComplaints(filtered);
+        }
+
+        // Display complaints
+        function displayComplaints(complaints) {
+            const complaintsList = document.getElementById('complaintsList');
+
+            if (complaints.length === 0) {
+                complaintsList.innerHTML = '<div class="empty-state"><p>No complaints to display</p></div>';
+                return;
+            }
+
+            complaintsList.innerHTML = complaints.map(complaint => `
+                <div class="complaint-card">
+                    <h3>${complaint.id}</h3>
+                    <p><strong>Name:</strong> ${complaint.name}</p>
+                    <p><strong>Category:</strong> ${complaint.category}</p>
+                    <p><strong>Description:</strong> ${complaint.description.substring(0, 100)}...</p>
+                    <div class="complaint-meta">
+                        <span class="status-badge status-${complaint.status}">${complaint.status.toUpperCase()}</span>
+                        <span class="date-info">${complaint.submittedDate}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search box live filtering
+        document.getElementById('searchInput').addEventListener('keyup', filterComplaints);
+
+        // Load initial complaints on view tab
+        setTimeout(() => {
+            filterComplaints();
+        }, 500);
+
+        // Initialize with sample data for demo
+        function initializeSampleData() {
+            const complaints = getComplaints();
+            if (Object.keys(complaints).length === 0) {
+                const sampleComplaints = {
+                    'CU-001-2024': {
+                        id: 'CU-001-2024',
+                        name: 'Arjun Singh',
+                        email: 'arjun@centurion.ac.in',
+                        phone: '9876543210',
+                        category: 'classroom',
+                        description: 'Projector in classroom A201 is not working properly. It flickers constantly.',
+                        photo: null,
+                        status: 'resolved',
+                        submittedDate: '2024-01-15',
+                        timeline: [
+                            { status: 'pending', date: '2024-01-15', message: 'Complaint submitted' },
+                            { status: 'assigned', date: '2024-01-15', message: 'Assigned to Maintenance Department' },
+                            { status: 'progress', date: '2024-01-16', message: 'Work in progress' },
+                            { status: 'resolved', date: '2024-01-17', message: 'Issue resolved - Projector replaced' }
+                        ]
+                    },
+                    'CU-002-2024': {
+                        id: 'CU-002-2024',
+                        name: 'Priya Sharma',
+                        email: 'priya@centurion.ac.in',
+                        phone: '9876543211',
+                        category: 'wifi',
+                        description: 'WiFi connectivity issues in hostel block C. Signal is very weak.',
+                        photo: null,
+                        status: 'progress',
+                        submittedDate: '2024-01-18',
+                        timeline: [
+                            { status: 'pending', date: '2024-01-18', message: 'Complaint submitted' },
+                            { status: 'assigned', date: '2024-01-18', message: 'Assigned to IT Department' },
+                            { status: 'progress', date: '2024-01-19', message: 'Signal booster installation in progress' }
+                        ]
+                    },
+                    'CU-003-2024': {
+                        id: 'CU-003-2024',
+                        name: 'Rahul Kumar',
+                        email: 'rahul@centurion.ac.in',
+                        phone: '9876543212',
+                        category: 'cleanliness',
+                        description: 'Washrooms in block D are not being cleaned regularly. Very unhygienic conditions.',
+                        photo: null,
+                        status: 'pending',
+                        submittedDate: '2024-01-20',
+                        timeline: [
+                            { status: 'pending', date: '2024-01-20', message: 'Complaint submitted' }
+                        ]
+                    }
+                };
+                saveComplaints(sampleComplaints);
+            }
+        }
+
+        initializeSampleData();
+    </script>
+</body>
+</html>
