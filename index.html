@@ -200,7 +200,9 @@ async function loadPhotoThumbs(){
   const cards=[...document.querySelectorAll('.thumb-img')];
   await Promise.all(cards.map(async img=>{
     const id=img.id.replace(/^thumb-/, '').replace(/-(student|staff|admin)$/,'');
-    const previous=thumbUrls.get(img.id); if(previous)URL.revokeObjectURL(previous);
+    const previous=thumbUrls.get(img.id);
+    if(previous)URL.revokeObjectURL(previous);
+    img.style.display='block';
     try{
       const res=await fetch(API_BASE+'/complaints/'+encodeURIComponent(id)+'/photo',{
         method:'GET',
@@ -208,7 +210,8 @@ async function loadPhotoThumbs(){
         cache:'no-store'
       });
       if(!res.ok){
-        img.alt='Uploaded image unavailable';
+        img.alt=res.status===404?'No image stored for this complaint':res.status===403?'You are not allowed to view this image':'Image could not be loaded';
+        img.style.opacity='0.15';
         return;
       }
       const blob=await res.blob();
@@ -216,9 +219,10 @@ async function loadPhotoThumbs(){
       const url=URL.createObjectURL(blob);
       thumbUrls.set(img.id,url);
       img.src=url;
-      img.style.display='block';
+      img.style.opacity='1';
     }catch(err){
       img.alt='Unable to load uploaded image';
+      img.style.opacity='0.15';
     }
   }));
 }
