@@ -202,11 +202,24 @@ async function loadPhotoThumbs(){
     const id=img.id.replace(/^thumb-/, '').replace(/-(student|staff|admin)$/,'');
     const previous=thumbUrls.get(img.id); if(previous)URL.revokeObjectURL(previous);
     try{
-      const res=await fetch(API_BASE+'/complaints/'+encodeURIComponent(id)+'/photo',{headers:{Authorization:'Bearer '+token}});
-      if(!res.ok)return;
-      const url=URL.createObjectURL(await res.blob());
-      thumbUrls.set(img.id,url);img.src=url;
-    }catch{}
+      const res=await fetch(API_BASE+'/complaints/'+encodeURIComponent(id)+'/photo',{
+        method:'GET',
+        headers:{Authorization:'Bearer '+token},
+        cache:'no-store'
+      });
+      if(!res.ok){
+        img.alt='Uploaded image unavailable';
+        return;
+      }
+      const blob=await res.blob();
+      if(!blob.type.startsWith('image/')) throw new Error('Invalid image response');
+      const url=URL.createObjectURL(blob);
+      thumbUrls.set(img.id,url);
+      img.src=url;
+      img.style.display='block';
+    }catch(err){
+      img.alt='Unable to load uploaded image';
+    }
   }));
 }
 
@@ -215,7 +228,7 @@ function closePhotoModal(){const c=$('modalPhotoContent');if(c.dataset.objectUrl
 async function viewTimeline(encodedId){const id=decodeURIComponent(encodedId);try{const d=await api('/complaints/'+encodeURIComponent(id)+'/details');const t=d.complaint?.timeline||[];const text=t.map((x,i)=>`${i+1}. ${statusLabel(x.status)} — ${x.message} (${formatDate(x.date)})`).join('\n\n');alert(text||'No timeline entries')}catch(err){alert(err.message)}}
 
 $('trackForm').addEventListener('submit',async e=>{e.preventDefault();clearMsg('trackMsg');$('trackResult').classList.add('hidden');try{const id=$('trackId').value.trim().toUpperCase();const d=await api('/complaints/'+encodeURIComponent(id));renderTrack(d.complaint)}catch(err){setMsg('trackMsg',err.message)}});
-function renderTrack(c){const timeline=(c.timeline||[]).map((x,i)=>`<div class="timeline-item"><div class="dot">${i+1}</div><div><p><strong>${escapeHtml(statusLabel(x.status))}</strong></p><p>${escapeHtml(x.message)}</p><p class="muted">${escapeHtml(formatDate(x.date))}</p></div></div>`).join('');$('trackResult').innerHTML=`<div class="card"><h3>${escapeHtml((c.category||'Complaint').toUpperCase())}</h3><p><strong>Complaint ID:</strong> ${escapeHtml(c.id)}</p><p><strong>Category:</strong> ${escapeHtml(c.category)}</p><p><strong>Description:</strong> ${escapeHtml(c.description)}</p><p><strong>Submitted:</strong> ${escapeHtml(formatDate(c.submittedDate))}</p><div class="row"><span class="badge ${escapeHtml(c.status)}">${statusLabel(c.status)}</span><span class="muted">Updated: ${escapeHtml(formatDate(c.updatedAt))}</span></div><div style="margin-top:18px"><h4>Status Timeline</h4><div class="timeline">${timeline||'<div class="empty">No timeline entries.</div>'}</div></div></div>`;$('trackResult').classList.remove('hidden')}
+function renderTrack(c){const timeline=(c.timeline||[]).map((x,i)=>`<div class="timeline-item"><div class="dot">${i+1}</div><div><p><strong>${escapeHtml(statusLabel(x.status))}</strong></p><p>${escapeHtml(x.message)}</p><p class="muted">${escapeHtml(formatDate(x.date))}</p></div></div>`).join('');const evidence=c.photoUrl?'<p><strong>Photo Evidence:</strong> Uploaded with this complaint and available in the authenticated dashboard.</p>':'';$('trackResult').innerHTML=`<div class="card"><h3>${escapeHtml((c.category||'Complaint').toUpperCase())}</h3><p><strong>Complaint ID:</strong> ${escapeHtml(c.id)}</p><p><strong>Category:</strong> ${escapeHtml(c.category)}</p><p><strong>Description:</strong> ${escapeHtml(c.description)}</p><p><strong>Submitted:</strong> ${escapeHtml(formatDate(c.submittedDate))}</p>${evidence}<div class="row"><span class="badge ${escapeHtml(c.status)}">${statusLabel(c.status)}</span><span class="muted">Updated: ${escapeHtml(formatDate(c.updatedAt))}</span></div><div style="margin-top:18px"><h4>Status Timeline</h4><div class="timeline">${timeline||'<div class="empty">No timeline entries.</div>'}</div></div></div>`;$('trackResult').classList.remove('hidden')}
 
 $('staffCreateForm').addEventListener('submit',async e=>{e.preventDefault();clearMsg('staffCreateMsg');try{const d=await api('/auth/staff',{method:'POST',body:JSON.stringify({name:$('newStaffName').value.trim(),email:$('newStaffEmail').value.trim(),department:$('newStaffDepartment').value.trim(),phone:$('newStaffPhone').value.trim(),password:$('newStaffPassword').value})});setMsg('staffCreateMsg',`Staff account created: ${d.staff?.name||'staff member'}`,'success');e.target.reset();const s=await api('/staff');staffList=s.staff||[];await loadAdminComplaints()}catch(err){setMsg('staffCreateMsg',err.message)}});
 
