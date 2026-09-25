@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Centurion University - Complaint Tracking System</title>
 
 <style>
@@ -26,6 +26,10 @@
   padding:0;
 }
 
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   font-family:'Segoe UI',Tahoma,Verdana,sans-serif;
   background:linear-gradient(135deg,var(--p),var(--p2));
@@ -34,8 +38,15 @@ body{
   color:var(--ink);
 }
 
-button,input,select,textarea{
+button,
+input,
+select,
+textarea{
   font:inherit;
+}
+
+button{
+  -webkit-tap-highlight-color:transparent;
 }
 
 .hidden{
@@ -43,8 +54,9 @@ button,input,select,textarea{
 }
 
 .container{
+  width:100%;
   max-width:1280px;
-  margin:auto;
+  margin:0 auto;
 }
 
 .header{
@@ -88,6 +100,7 @@ button,input,select,textarea{
 }
 
 .panel{
+  width:100%;
   background:#fff;
   border-radius:18px;
   padding:28px;
@@ -179,6 +192,7 @@ button,input,select,textarea{
 }
 
 .auth-wrap{
+  width:100%;
   max-width:700px;
   margin:0 auto;
 }
@@ -372,17 +386,12 @@ button,input,select,textarea{
 }
 
 .photo-box img{
+  display:block;
   width:100%;
   max-height:220px;
   object-fit:contain;
   border-radius:8px;
   background:#f4f4f5;
-}
-
-.photo-placeholder{
-  padding:28px 10px;
-  text-align:center;
-  color:#9ca3af;
 }
 
 .filterbar{
@@ -531,13 +540,42 @@ button,input,select,textarea{
   height:100%;
 }
 
-/* AI SECTION */
+/* =========================================================
+   STUDENT DASHBOARD FIX
+   ========================================================= */
+
+.student-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:24px;
+  align-items:start;
+  width:100%;
+}
+
+.student-submit-column,
+.student-list-column{
+  width:100%;
+  min-width:0;
+}
+
+.student-list-column{
+  min-height:200px;
+}
+
+/* =========================================================
+   AI ANALYSIS
+   ========================================================= */
+
 .ai-box{
   margin-top:14px;
   padding:15px;
   border-radius:13px;
   border:1px solid #ddd6fe;
-  background:linear-gradient(135deg,#faf7ff,#f5f3ff);
+  background:linear-gradient(
+    135deg,
+    #faf7ff,
+    #f5f3ff
+  );
 }
 
 .ai-header{
@@ -633,10 +671,10 @@ button,input,select,textarea{
   text-align:center;
   color:#6b7280;
   border-radius:12px;
-  grid-column:1/-1;
 }
 
 @media(max-width:980px){
+
   .grid.two,
   .grid.three,
   .stats{
@@ -647,12 +685,17 @@ button,input,select,textarea{
     grid-template-columns:1fr 1fr;
   }
 
+  .student-layout{
+    grid-template-columns:1fr;
+  }
+
   .ai-grid{
     grid-template-columns:1fr 1fr;
   }
 }
 
 @media(max-width:640px){
+
   body{
     padding:10px;
   }
@@ -687,863 +730,1028 @@ button,input,select,textarea{
     flex-direction:column;
   }
 
+  .student-layout{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
   .ai-grid{
     grid-template-columns:1fr;
   }
 }
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<header class="header">
-  <h1>🏛️ Complaint Tracking System</h1>
-  <p>Centurion University of Technology and Management</p>
-</header>
+  <header class="header">
+    <h1>🏛️ Complaint Tracking System</h1>
+    <p>Centurion University of Technology and Management</p>
+  </header>
 
-<nav class="nav" id="mainNav">
-  <button class="active" data-view="home">🏠 Home</button>
-  <button data-view="track">🔍 Track Complaint</button>
-  <button data-view="auth" id="loginNav">🔐 Login</button>
-  <button data-view="dashboard" id="dashboardNav" class="hidden">📊 Dashboard</button>
-  <button id="logoutBtn" class="hidden">🚪 Logout</button>
-</nav>
+  <nav class="nav" id="mainNav">
 
-<section id="homeView" class="panel">
+    <button
+      class="active"
+      data-view="home"
+    >
+      🏠 Home
+    </button>
 
-  <div class="auth-wrap">
+    <button data-view="track">
+      🔍 Track Complaint
+    </button>
 
-```
-<h2 style="text-align:center">Welcome 👋</h2>
+    <button
+      data-view="auth"
+      id="loginNav"
+    >
+      🔐 Login
+    </button>
 
-<p
-  class="muted"
-  style="text-align:center;margin-bottom:18px"
->
-  One platform for students to report issues,
-  staff to resolve them and administrators to
-  manage the complete complaint workflow.
-</p>
+    <button
+      data-view="dashboard"
+      id="dashboardNav"
+      class="hidden"
+    >
+      📊 Dashboard
+    </button>
 
-<div class="grid three home-cards">
+    <button
+      id="logoutBtn"
+      class="hidden"
+    >
+      🚪 Logout
+    </button>
 
-  <div class="card">
-    <h3>🎓 Student</h3>
-    <p>
-      Create an account, submit complaints with
-      photo evidence, get AI-powered analysis and
-      follow status updates from your dashboard.
-    </p>
-  </div>
+  </nav>
 
-  <div class="card">
-    <h3>🧑‍💼 Staff</h3>
-    <p>
-      See complaints assigned to you, review the
-      uploaded problem image, check AI insights
-      and update progress.
-    </p>
-  </div>
 
-  <div class="card">
-    <h3>👑 Admin</h3>
-    <p>
-      Manage every complaint, assign staff, review
-      evidence, view AI priority recommendations
-      and control the complete workflow.
-    </p>
-  </div>
+  <!-- HOME -->
 
-</div>
-
-<div
-  style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px"
->
-  <button
-    class="btn primary"
-    onclick="showView('auth')"
+  <section
+    id="homeView"
+    class="panel"
   >
-    Login / Student Signup
-  </button>
 
-  <button
-    class="btn secondary"
-    onclick="showView('track')"
-  >
-    Track Existing Complaint
-  </button>
-</div>
-```
+    <div class="auth-wrap">
 
-  </div>
+      <h2 style="text-align:center">
+        Welcome 👋
+      </h2>
 
-</section>
-
-<section id="authView" class="panel hidden">
-
-  <div class="auth-wrap">
-
-```
-<div id="authMsg" class="msg"></div>
-
-<div class="role-tabs">
-
-  <button
-    data-role="student"
-    class="active"
-  >
-    🎓 Student
-  </button>
-
-  <button data-role="staff">
-    🧑‍💼 Staff
-  </button>
-
-  <button data-role="admin">
-    👑 Admin
-  </button>
-
-</div>
-
-<div id="studentAuth">
-
-  <div id="studentLoginBox">
-
-    <h2>Student Login</h2>
-
-    <form id="studentLoginForm">
-
-      <div class="field">
-        <label>Email</label>
-        <input
-          id="loginEmail"
-          type="email"
-          autocomplete="username"
-          required
-        >
-      </div>
-
-      <div class="field">
-        <label>Password</label>
-        <input
-          id="loginPassword"
-          type="password"
-          autocomplete="current-password"
-          minlength="8"
-          required
-        >
-      </div>
-
-      <button
-        class="btn primary"
-        style="width:100%"
+      <p
+        class="muted"
+        style="text-align:center;margin-bottom:18px"
       >
-        Login
-      </button>
+        One platform for students to report issues,
+        staff to resolve them and administrators to
+        manage the complete complaint workflow.
+      </p>
 
-    </form>
+      <div class="grid three home-cards">
 
-    <div class="auth-switch">
-      New student?
-
-      <button
-        class="linkbtn"
-        type="button"
-        onclick="toggleStudentMode(true)"
-      >
-        Create account
-      </button>
-    </div>
-
-  </div>
-
-  <div
-    id="studentSignupBox"
-    class="hidden"
-  >
-
-    <h2>Create Student Account</h2>
-
-    <form id="studentSignupForm">
-
-      <div class="grid two">
-
-        <div class="field">
-          <label>Full Name</label>
-          <input
-            id="signupName"
-            autocomplete="name"
-            required
-          >
+        <div class="card">
+          <h3>🎓 Student</h3>
+          <p>
+            Create an account, submit complaints with
+            photo evidence, get AI-powered analysis and
+            follow status updates from your dashboard.
+          </p>
         </div>
 
-        <div class="field">
-          <label>Phone</label>
-          <input
-            id="signupPhone"
-            autocomplete="tel"
-            required
-          >
+        <div class="card">
+          <h3>🧑‍💼 Staff</h3>
+          <p>
+            See complaints assigned to you, review
+            uploaded evidence, check AI insights and
+            update progress.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>👑 Admin</h3>
+          <p>
+            Manage every complaint, assign staff,
+            review evidence, view AI insights and
+            control the complete workflow.
+          </p>
         </div>
 
       </div>
-
-      <div class="field">
-        <label>Email</label>
-        <input
-          id="signupEmail"
-          type="email"
-          autocomplete="email"
-          required
-        >
-      </div>
-
-      <div class="field">
-        <label>Password</label>
-        <input
-          id="signupPassword"
-          type="password"
-          autocomplete="new-password"
-          minlength="8"
-          required
-        >
-      </div>
-
-      <button
-        class="btn primary"
-        style="width:100%"
-      >
-        Create Student Account
-      </button>
-
-    </form>
-
-    <div class="auth-switch">
-      Already registered?
-
-      <button
-        class="linkbtn"
-        type="button"
-        onclick="toggleStudentMode(false)"
-      >
-        Login
-      </button>
-    </div>
-
-  </div>
-
-</div>
-
-<div
-  id="staffAuth"
-  class="hidden"
->
-
-  <h2>Staff Login</h2>
-
-  <p
-    class="muted"
-    style="margin-bottom:14px"
-  >
-    Staff accounts are created by the administrator.
-  </p>
-
-  <form id="staffLoginForm">
-
-    <div class="field">
-      <label>Email</label>
-      <input
-        id="staffEmail"
-        type="email"
-        autocomplete="username"
-        required
-      >
-    </div>
-
-    <div class="field">
-      <label>Password</label>
-      <input
-        id="staffPassword"
-        type="password"
-        autocomplete="current-password"
-        required
-      >
-    </div>
-
-    <button
-      class="btn primary"
-      style="width:100%"
-    >
-      Staff Login
-    </button>
-
-  </form>
-
-</div>
-
-<div
-  id="adminAuth"
-  class="hidden"
->
-
-  <h2>Admin Login</h2>
-
-  <p
-    class="muted"
-    style="margin-bottom:14px"
-  >
-    Use the ADMIN_EMAIL and ADMIN_PASSWORD
-    configured in Render.
-  </p>
-
-  <form id="adminLoginForm">
-
-    <div class="field">
-      <label>Admin Email</label>
-      <input
-        id="adminEmail"
-        type="email"
-        autocomplete="username"
-        required
-      >
-    </div>
-
-    <div class="field">
-      <label>Admin Password</label>
-      <input
-        id="adminPassword"
-        type="password"
-        autocomplete="current-password"
-        required
-      >
-    </div>
-
-    <button
-      class="btn primary"
-      style="width:100%"
-    >
-      Admin Login
-    </button>
-
-  </form>
-
-</div>
-```
-
-  </div>
-
-</section>
-
-<section
-  id="trackView"
-  class="panel hidden"
->
-
-  <h2>Track Your Complaint</h2>
-
-  <form
-    id="trackForm"
-    class="grid two"
-    style="max-width:760px"
-  >
-
-```
-<div class="field">
-
-  <label>Complaint ID</label>
-
-  <input
-    id="trackId"
-    placeholder="e.g. CU-2026-348040"
-    required
-  >
-
-</div>
-
-<div
-  style="display:flex;align-items:end;padding-bottom:15px"
->
-
-  <button
-    class="btn primary"
-    style="width:100%"
-  >
-    Search
-  </button>
-
-</div>
-```
-
-  </form>
-
-  <div id="trackMsg" class="msg"></div>
-
-  <div
-    id="trackResult"
-    class="hidden"
-    style="margin-top:18px"
-  ></div>
-
-</section>
-
-<section
-  id="studentView"
-  class="panel hidden"
->
-
-  <div class="dashboard-head">
-
-```
-<div>
-
-  <h2>Student Dashboard</h2>
-
-  <span
-    class="user-chip"
-    id="studentUserChip"
-  ></span>
-
-</div>
-
-<button
-  class="btn secondary"
-  onclick="refreshStudent()"
->
-  ↻ Refresh
-</button>
-```
-
-  </div>
-
-  <div
-    class="stats"
-    id="studentStats"
-  ></div>
-
-  <div class="grid two">
-
-```
-<div>
-
-  <h2 style="font-size:1.25rem">
-    Submit a Complaint
-  </h2>
-
-  <div
-    id="studentSubmitMsg"
-    class="msg"
-  ></div>
-
-  <form id="complaintForm">
-
-    <div class="grid two">
-
-      <div class="field">
-
-        <label>Student Name</label>
-
-        <input
-          id="studentName"
-          readonly
-        >
-
-      </div>
-
-      <div class="field">
-
-        <label>Phone</label>
-
-        <input
-          id="studentPhone"
-          readonly
-        >
-
-      </div>
-
-    </div>
-
-    <div class="field">
-
-      <label>Email</label>
-
-      <input
-        id="studentEmail"
-        readonly
-      >
-
-    </div>
-
-    <div class="field">
-
-      <label>Complaint Category</label>
-
-      <select
-        id="complaintCategory"
-        required
-      >
-
-        <option value="">
-          -- Select Category --
-        </option>
-
-        <option value="classroom">
-          🚪 Classroom Equipment Problem
-        </option>
-
-        <option value="wifi">
-          📡 Wi-Fi Problem
-        </option>
-
-        <option value="electricity">
-          ⚡ Electricity Problem
-        </option>
-
-        <option value="hostel">
-          🏠 Hostel Problem
-        </option>
-
-        <option value="cleanliness">
-          🧹 Cleanliness Problem
-        </option>
-
-        <option value="lab">
-          🔬 Lab Equipment Problem
-        </option>
-
-        <option value="other">
-          📌 Other
-        </option>
-
-      </select>
-
-    </div>
-
-    <div class="field">
-
-      <label>Description</label>
-
-      <textarea
-        id="complaintDescription"
-        required
-        placeholder="Describe the problem in detail..."
-      ></textarea>
-
-    </div>
-
-    <div class="field">
-
-      <label>
-        Upload Photo (Optional, max 5MB)
-      </label>
 
       <div
-        class="upload"
-        id="uploadArea"
+        style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px"
       >
 
-        <p>
-          📤 Click to upload or drag and drop
+        <button
+          class="btn primary"
+          onclick="showView('auth')"
+        >
+          Login / Student Signup
+        </button>
+
+        <button
+          class="btn secondary"
+          onclick="showView('track')"
+        >
+          Track Existing Complaint
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- AUTH -->
+
+  <section
+    id="authView"
+    class="panel hidden"
+  >
+
+    <div class="auth-wrap">
+
+      <div
+        id="authMsg"
+        class="msg"
+      ></div>
+
+      <div class="role-tabs">
+
+        <button
+          data-role="student"
+          class="active"
+        >
+          🎓 Student
+        </button>
+
+        <button data-role="staff">
+          🧑‍💼 Staff
+        </button>
+
+        <button data-role="admin">
+          👑 Admin
+        </button>
+
+      </div>
+
+
+      <div id="studentAuth">
+
+        <div id="studentLoginBox">
+
+          <h2>Student Login</h2>
+
+          <form id="studentLoginForm">
+
+            <div class="field">
+              <label>Email</label>
+
+              <input
+                id="loginEmail"
+                type="email"
+                autocomplete="username"
+                required
+              >
+            </div>
+
+            <div class="field">
+              <label>Password</label>
+
+              <input
+                id="loginPassword"
+                type="password"
+                autocomplete="current-password"
+                minlength="8"
+                required
+              >
+            </div>
+
+            <button
+              class="btn primary"
+              style="width:100%"
+            >
+              Login
+            </button>
+
+          </form>
+
+          <div class="auth-switch">
+
+            New student?
+
+            <button
+              class="linkbtn"
+              type="button"
+              onclick="toggleStudentMode(true)"
+            >
+              Create account
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="studentSignupBox"
+          class="hidden"
+        >
+
+          <h2>Create Student Account</h2>
+
+          <form id="studentSignupForm">
+
+            <div class="grid two">
+
+              <div class="field">
+                <label>Full Name</label>
+
+                <input
+                  id="signupName"
+                  autocomplete="name"
+                  required
+                >
+              </div>
+
+              <div class="field">
+                <label>Phone</label>
+
+                <input
+                  id="signupPhone"
+                  autocomplete="tel"
+                  required
+                >
+              </div>
+
+            </div>
+
+            <div class="field">
+
+              <label>Email</label>
+
+              <input
+                id="signupEmail"
+                type="email"
+                autocomplete="email"
+                required
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Password</label>
+
+              <input
+                id="signupPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+              >
+
+            </div>
+
+            <button
+              class="btn primary"
+              style="width:100%"
+            >
+              Create Student Account
+            </button>
+
+          </form>
+
+          <div class="auth-switch">
+
+            Already registered?
+
+            <button
+              class="linkbtn"
+              type="button"
+              onclick="toggleStudentMode(false)"
+            >
+              Login
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="staffAuth"
+        class="hidden"
+      >
+
+        <h2>Staff Login</h2>
+
+        <p
+          class="muted"
+          style="margin-bottom:14px"
+        >
+          Staff accounts are created by the administrator.
         </p>
 
-        <small>
-          PNG, JPG, GIF, WEBP up to 5MB
-        </small>
+        <form id="staffLoginForm">
+
+          <div class="field">
+
+            <label>Email</label>
+
+            <input
+              id="staffEmail"
+              type="email"
+              autocomplete="username"
+              required
+            >
+
+          </div>
+
+          <div class="field">
+
+            <label>Password</label>
+
+            <input
+              id="staffPassword"
+              type="password"
+              autocomplete="current-password"
+              required
+            >
+
+          </div>
+
+          <button
+            class="btn primary"
+            style="width:100%"
+          >
+            Staff Login
+          </button>
+
+        </form>
+
+      </div>
+
+
+      <div
+        id="adminAuth"
+        class="hidden"
+      >
+
+        <h2>Admin Login</h2>
+
+        <p
+          class="muted"
+          style="margin-bottom:14px"
+        >
+          Use the ADMIN_EMAIL and ADMIN_PASSWORD
+          configured in Render.
+        </p>
+
+        <form id="adminLoginForm">
+
+          <div class="field">
+
+            <label>Admin Email</label>
+
+            <input
+              id="adminEmail"
+              type="email"
+              autocomplete="username"
+              required
+            >
+
+          </div>
+
+          <div class="field">
+
+            <label>Admin Password</label>
+
+            <input
+              id="adminPassword"
+              type="password"
+              autocomplete="current-password"
+              required
+            >
+
+          </div>
+
+          <button
+            class="btn primary"
+            style="width:100%"
+          >
+            Admin Login
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- TRACK -->
+
+  <section
+    id="trackView"
+    class="panel hidden"
+  >
+
+    <h2>Track Your Complaint</h2>
+
+    <form
+      id="trackForm"
+      class="grid two"
+      style="max-width:760px"
+    >
+
+      <div class="field">
+
+        <label>Complaint ID</label>
 
         <input
-          type="file"
-          id="photoUpload"
-          accept="image/*"
+          id="trackId"
+          placeholder="e.g. CU-2026-348040"
+          required
         >
 
       </div>
 
       <div
-        id="filePreview"
-        class="preview hidden"
+        style="display:flex;align-items:end;padding-bottom:15px"
       >
-        <img
-          id="previewImg"
-          alt="Selected image preview"
+
+        <button
+          class="btn primary"
+          style="width:100%"
         >
+          Search
+        </button>
+
+      </div>
+
+    </form>
+
+    <div
+      id="trackMsg"
+      class="msg"
+    ></div>
+
+    <div
+      id="trackResult"
+      class="hidden"
+      style="margin-top:18px"
+    ></div>
+
+  </section>
+
+
+  <!-- STUDENT DASHBOARD -->
+
+  <section
+    id="studentView"
+    class="panel hidden"
+  >
+
+    <div class="dashboard-head">
+
+      <div>
+
+        <h2>Student Dashboard</h2>
+
+        <span
+          class="user-chip"
+          id="studentUserChip"
+        ></span>
+
+      </div>
+
+      <button
+        class="btn secondary"
+        onclick="refreshStudent()"
+      >
+        ↻ Refresh
+      </button>
+
+    </div>
+
+
+    <div
+      class="stats"
+      id="studentStats"
+    ></div>
+
+
+    <!-- IMPORTANT: fixed student layout -->
+
+    <div class="student-layout">
+
+      <!-- LEFT COLUMN -->
+
+      <div class="student-submit-column">
+
+        <h2 style="font-size:1.25rem">
+          Submit a Complaint
+        </h2>
+
+        <div
+          id="studentSubmitMsg"
+          class="msg"
+        ></div>
+
+        <form id="complaintForm">
+
+          <div class="grid two">
+
+            <div class="field">
+
+              <label>Student Name</label>
+
+              <input
+                id="studentName"
+                readonly
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Phone</label>
+
+              <input
+                id="studentPhone"
+                readonly
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>Email</label>
+
+            <input
+              id="studentEmail"
+              readonly
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Complaint Category
+            </label>
+
+            <select
+              id="complaintCategory"
+              required
+            >
+
+              <option value="">
+                -- Select Category --
+              </option>
+
+              <option value="classroom">
+                🚪 Classroom Equipment Problem
+              </option>
+
+              <option value="wifi">
+                📡 Wi-Fi Problem
+              </option>
+
+              <option value="electricity">
+                ⚡ Electricity Problem
+              </option>
+
+              <option value="hostel">
+                🏠 Hostel Problem
+              </option>
+
+              <option value="cleanliness">
+                🧹 Cleanliness Problem
+              </option>
+
+              <option value="lab">
+                🔬 Lab Equipment Problem
+              </option>
+
+              <option value="other">
+                📌 Other
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>Description</label>
+
+            <textarea
+              id="complaintDescription"
+              required
+              placeholder="Describe the problem in detail..."
+            ></textarea>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Upload Photo (Optional, max 5MB)
+            </label>
+
+            <div
+              class="upload"
+              id="uploadArea"
+            >
+
+              <p>
+                📤 Click to upload or drag and drop
+              </p>
+
+              <small>
+                PNG, JPG, GIF, WEBP up to 5MB
+              </small>
+
+              <input
+                type="file"
+                id="photoUpload"
+                accept="image/*"
+              >
+
+            </div>
+
+
+            <div
+              id="filePreview"
+              class="preview hidden"
+            >
+
+              <img
+                id="previewImg"
+                alt="Selected image preview"
+              >
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="btn primary"
+            id="submitButton"
+            type="submit"
+            style="width:100%"
+          >
+            Submit Complaint
+          </button>
+
+        </form>
+
+      </div>
+
+
+      <!-- RIGHT COLUMN -->
+
+      <div class="student-list-column">
+
+        <h2 style="font-size:1.25rem">
+          My Complaints
+        </h2>
+
+        <div
+          id="studentComplaints"
+          class="cards"
+        ></div>
+
       </div>
 
     </div>
 
-    <button
-      class="btn primary"
-      id="submitButton"
-      type="submit"
-      style="width:100%"
-    >
-      Submit Complaint
-    </button>
+  </section>
 
-  </form>
 
-</div>
+  <!-- STAFF DASHBOARD -->
 
-<div>
-
-  <h2 style="font-size:1.25rem">
-    My Complaints
-  </h2>
-
-  <div
-    id="studentComplaints"
-    class="cards"
-  ></div>
-
-</div>
-```
-
-  </div>
-
-</section>
-
-<section
-  id="staffView"
-  class="panel hidden"
->
-
-  <div class="dashboard-head">
-
-```
-<div>
-
-  <h2>Staff Dashboard</h2>
-
-  <span
-    class="user-chip"
-    id="staffUserChip"
-  ></span>
-
-</div>
-
-<button
-  class="btn secondary"
-  onclick="refreshStaff()"
->
-  ↻ Refresh
-</button>
-```
-
-  </div>
-
-  <div
-    class="stats"
-    id="staffStats"
-  ></div>
-
-  <div
-    id="staffMsg"
-    class="msg"
-  ></div>
-
-  <div
-    id="staffComplaints"
-    class="cards"
-  ></div>
-
-</section>
-
-<section
-  id="adminView"
-  class="panel hidden"
->
-
-  <div class="dashboard-head">
-
-```
-<div>
-
-  <h2>Admin Dashboard</h2>
-
-  <span
-    class="user-chip"
-    id="adminUserChip"
-  ></span>
-
-</div>
-
-<button
-  class="btn secondary"
-  onclick="refreshAdmin()"
->
-  ↻ Refresh
-</button>
-```
-
-  </div>
-
-  <div
-    class="stats"
-    id="adminStats"
-  ></div>
-
-  <div class="subtle">
-
-```
-<strong>Administrator controls</strong>
-
-<p
-  class="muted"
-  style="margin-top:6px"
->
-  Search complaints, assign a staff member,
-  view uploaded evidence, review AI analysis
-  and update status.
-</p>
-```
-
-  </div>
-
-  <div style="margin-top:20px">
-
-```
-<div class="filterbar">
-
-  <input
-    id="adminSearch"
-    placeholder="Search by ID, student name, email or category..."
+  <section
+    id="staffView"
+    class="panel hidden"
   >
 
-  <select id="adminStatus">
+    <div class="dashboard-head">
 
-    <option value="">All Status</option>
-    <option value="pending">Pending</option>
-    <option value="assigned">Assigned</option>
-    <option value="progress">In Progress</option>
-    <option value="resolved">Resolved</option>
-    <option value="closed">Closed</option>
+      <div>
 
-  </select>
+        <h2>Staff Dashboard</h2>
 
-  <select id="adminCategory">
+        <span
+          class="user-chip"
+          id="staffUserChip"
+        ></span>
 
-    <option value="">All Categories</option>
-    <option value="classroom">Classroom</option>
-    <option value="wifi">Wi-Fi</option>
-    <option value="electricity">Electricity</option>
-    <option value="hostel">Hostel</option>
-    <option value="cleanliness">Cleanliness</option>
-    <option value="lab">Lab</option>
-    <option value="other">Other</option>
+      </div>
 
-  </select>
+      <button
+        class="btn secondary"
+        onclick="refreshStaff()"
+      >
+        ↻ Refresh
+      </button>
 
-  <button
-    class="btn secondary"
-    onclick="loadAdminComplaints()"
+    </div>
+
+
+    <div
+      class="stats"
+      id="staffStats"
+    ></div>
+
+
+    <div
+      id="staffMsg"
+      class="msg"
+    ></div>
+
+
+    <div
+      id="staffComplaints"
+      class="cards"
+    ></div>
+
+  </section>
+
+
+  <!-- ADMIN DASHBOARD -->
+
+  <section
+    id="adminView"
+    class="panel hidden"
   >
-    Apply
-  </button>
+
+    <div class="dashboard-head">
+
+      <div>
+
+        <h2>Admin Dashboard</h2>
+
+        <span
+          class="user-chip"
+          id="adminUserChip"
+        ></span>
+
+      </div>
+
+      <button
+        class="btn secondary"
+        onclick="refreshAdmin()"
+      >
+        ↻ Refresh
+      </button>
+
+    </div>
+
+
+    <div
+      class="stats"
+      id="adminStats"
+    ></div>
+
+
+    <div class="subtle">
+
+      <strong>
+        Administrator controls
+      </strong>
+
+      <p
+        class="muted"
+        style="margin-top:6px"
+      >
+        Search complaints, assign staff,
+        view uploaded evidence, review AI analysis
+        and update status.
+      </p>
+
+    </div>
+
+
+    <div style="margin-top:20px">
+
+      <div class="filterbar">
+
+        <input
+          id="adminSearch"
+          placeholder="Search by ID, student name, email or category..."
+        >
+
+        <select id="adminStatus">
+
+          <option value="">
+            All Status
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="assigned">
+            Assigned
+          </option>
+
+          <option value="progress">
+            In Progress
+          </option>
+
+          <option value="resolved">
+            Resolved
+          </option>
+
+          <option value="closed">
+            Closed
+          </option>
+
+        </select>
+
+
+        <select id="adminCategory">
+
+          <option value="">
+            All Categories
+          </option>
+
+          <option value="classroom">
+            Classroom
+          </option>
+
+          <option value="wifi">
+            Wi-Fi
+          </option>
+
+          <option value="electricity">
+            Electricity
+          </option>
+
+          <option value="hostel">
+            Hostel
+          </option>
+
+          <option value="cleanliness">
+            Cleanliness
+          </option>
+
+          <option value="lab">
+            Lab
+          </option>
+
+          <option value="other">
+            Other
+          </option>
+
+        </select>
+
+
+        <button
+          class="btn secondary"
+          onclick="loadAdminComplaints()"
+        >
+          Apply
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="list-toolbar">
+
+      <span
+        class="count-chip"
+        id="adminCountChip"
+      >
+        0 complaints
+      </span>
+
+    </div>
+
+
+    <div
+      id="adminComplaints"
+      class="cards"
+    ></div>
+
+
+    <div class="staff-create">
+
+      <h2 style="font-size:1.25rem">
+        Create Staff Account
+      </h2>
+
+      <div
+        id="staffCreateMsg"
+        class="msg"
+      ></div>
+
+      <form id="staffCreateForm">
+
+        <div class="grid two">
+
+          <div class="field">
+
+            <label>Name</label>
+
+            <input
+              id="newStaffName"
+              required
+            >
+
+          </div>
+
+          <div class="field">
+
+            <label>Department</label>
+
+            <input
+              id="newStaffDepartment"
+              placeholder="IT / Maintenance / Hostel / etc."
+              required
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="grid two">
+
+          <div class="field">
+
+            <label>Email</label>
+
+            <input
+              id="newStaffEmail"
+              type="email"
+              required
+            >
+
+          </div>
+
+          <div class="field">
+
+            <label>Phone</label>
+
+            <input id="newStaffPhone">
+
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Temporary Password
+          </label>
+
+          <input
+            id="newStaffPassword"
+            type="password"
+            minlength="8"
+            required
+          >
+
+        </div>
+
+
+        <button class="btn primary">
+          Create Staff Account
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
 
 </div>
-```
 
-  </div>
 
-  <div class="list-toolbar">
-
-```
-<span
-  class="count-chip"
-  id="adminCountChip"
->
-  0 complaints
-</span>
-```
-
-  </div>
-
-  <div
-    id="adminComplaints"
-    class="cards"
-  ></div>
-
-  <div class="staff-create">
-
-```
-<h2 style="font-size:1.25rem">
-  Create Staff Account
-</h2>
-
-<div
-  id="staffCreateMsg"
-  class="msg"
-></div>
-
-<form id="staffCreateForm">
-
-  <div class="grid two">
-
-    <div class="field">
-      <label>Name</label>
-      <input
-        id="newStaffName"
-        required
-      >
-    </div>
-
-    <div class="field">
-      <label>Department</label>
-      <input
-        id="newStaffDepartment"
-        placeholder="IT / Maintenance / Hostel / etc."
-        required
-      >
-    </div>
-
-  </div>
-
-  <div class="grid two">
-
-    <div class="field">
-      <label>Email</label>
-      <input
-        id="newStaffEmail"
-        type="email"
-        required
-      >
-    </div>
-
-    <div class="field">
-      <label>Phone</label>
-      <input
-        id="newStaffPhone"
-      >
-    </div>
-
-  </div>
-
-  <div class="field">
-
-    <label>Temporary Password</label>
-
-    <input
-      id="newStaffPassword"
-      type="password"
-      minlength="8"
-      required
-    >
-
-  </div>
-
-  <button class="btn primary">
-    Create Staff Account
-  </button>
-
-</form>
-```
-
-  </div>
-
-</section>
-
-</div>
+<!-- PHOTO MODAL -->
 
 <div
   id="photoModal"
@@ -1553,26 +1761,29 @@ button,input,select,textarea{
 
   <div class="modal-inner">
 
-```
-<div class="modal-head">
+    <div class="modal-head">
 
-  <h3>Uploaded Complaint Image</h3>
+      <h3>
+        Uploaded Complaint Image
+      </h3>
 
-  <button
-    class="btn danger small"
-    onclick="closePhotoModal()"
-  >
-    Close
-  </button>
+      <button
+        class="btn danger small"
+        onclick="closePhotoModal()"
+      >
+        Close
+      </button>
 
-</div>
+    </div>
 
-<div id="modalPhotoContent"></div>
-```
+    <div
+      id="modalPhotoContent"
+    ></div>
 
   </div>
 
 </div>
+
 
 <script>
 
@@ -1596,8 +1807,10 @@ let adminComplaints = [];
 let staffList = [];
 let thumbUrls = new Map();
 
+
 const $ = id =>
   document.getElementById(id);
+
 
 const statusLabel = s =>
   ({
@@ -1607,6 +1820,7 @@ const statusLabel = s =>
     resolved:'Resolved',
     closed:'Closed'
   }[s] || s || 'Unknown');
+
 
 const formatDate = d =>
   d
@@ -1619,41 +1833,54 @@ const formatDate = d =>
       )
     : '-';
 
+
 function escapeHtml(v){
-  return String(v ?? '').replace(
-    /[&<>'"]/g,
-    c => ({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      "'":'&#39;',
-      '"':'&quot;'
-    }[c])
-  );
+
+  return String(v ?? '')
+    .replace(
+      /[&<>'"]/g,
+      c => ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        "'":'&#39;',
+        '"':'&quot;'
+      }[c])
+    );
+
 }
+
 
 function setMsg(
   id,
   text,
   type='error'
 ){
+
   const e = $(id);
 
   if(!e) return;
 
   e.textContent = text;
+
   e.className =
     `msg show ${type}`;
+
 }
 
+
 function clearMsg(id){
+
   const e = $(id);
 
   if(!e) return;
 
   e.textContent = '';
+
   e.className = 'msg';
+
 }
+
 
 function updateNav(){
 
@@ -1677,7 +1904,9 @@ function updateNav(){
       'hidden',
       !token
     );
+
 }
+
 
 function showView(view){
 
@@ -1688,8 +1917,9 @@ function showView(view){
 
   document
     .querySelectorAll('.panel')
-    .forEach(p =>
-      p.classList.add('hidden')
+    .forEach(
+      p =>
+        p.classList.add('hidden')
     );
 
   const target =
@@ -1703,16 +1933,17 @@ function showView(view){
     .querySelectorAll(
       '#mainNav button[data-view]'
     )
-    .forEach(b =>
-      b.classList.toggle(
-        'active',
-        b.dataset.view === view ||
-        (
-          b.dataset.view === 'dashboard' &&
-          ['student','staff','admin']
-            .includes(view)
+    .forEach(
+      b =>
+        b.classList.toggle(
+          'active',
+          b.dataset.view === view ||
+          (
+            b.dataset.view === 'dashboard' &&
+            ['student','staff','admin']
+              .includes(view)
+          )
         )
-      )
     );
 
   if(view === 'student')
@@ -1723,32 +1954,39 @@ function showView(view){
 
   if(view === 'admin')
     refreshAdmin();
+
 }
+
 
 document
   .querySelectorAll(
     '#mainNav button[data-view]'
   )
-  .forEach(b =>
-    b.addEventListener(
-      'click',
-      () => {
+  .forEach(
+    b =>
+      b.addEventListener(
+        'click',
+        () => {
 
-        const v =
-          b.dataset.view;
+          const v =
+            b.dataset.view;
 
-        if(
-          v === 'dashboard' &&
-          !token
-        ){
-          showView('auth');
-          return;
+          if(
+            v === 'dashboard' &&
+            !token
+          ){
+
+            showView('auth');
+            return;
+
+          }
+
+          showView(v);
+
         }
-
-        showView(v);
-      }
-    )
+      )
   );
+
 
 $('logoutBtn')
   .addEventListener(
@@ -1768,44 +2006,57 @@ $('logoutBtn')
       );
 
       updateNav();
+
       showView('home');
+
     }
   );
+
 
 document
   .querySelectorAll(
     '.role-tabs button'
   )
-  .forEach(b =>
-    b.addEventListener(
-      'click',
-      () => {
+  .forEach(
+    b =>
+      b.addEventListener(
+        'click',
+        () => {
 
-        document
-          .querySelectorAll(
-            '.role-tabs button'
-          )
-          .forEach(x =>
-            x.classList.remove(
-              'active'
+          document
+            .querySelectorAll(
+              '.role-tabs button'
             )
-          );
+            .forEach(
+              x =>
+                x.classList.remove(
+                  'active'
+                )
+            );
 
-        b.classList.add('active');
+          b.classList.add('active');
 
-        ['student','staff','admin']
-          .forEach(r =>
-            $(r + 'Auth')
-              .classList.toggle(
-                'hidden',
-                r !== b.dataset.role
-              )
-          );
+          [
+            'student',
+            'staff',
+            'admin'
+          ]
+            .forEach(
+              r =>
+                $(r + 'Auth')
+                  .classList
+                  .toggle(
+                    'hidden',
+                    r !== b.dataset.role
+                  )
+            );
 
-        clearMsg('authMsg');
-      }
-    )
+          clearMsg('authMsg');
+
+        }
+      )
   );
+
 
 function toggleStudentMode(signup){
 
@@ -1824,9 +2075,13 @@ function toggleStudentMode(signup){
     );
 
   clearMsg('authMsg');
+
 }
 
-function authHeaders(json=true){
+
+function authHeaders(
+  json=true
+){
 
   const h = {};
 
@@ -1841,7 +2096,9 @@ function authHeaders(json=true){
   }
 
   return h;
+
 }
+
 
 async function api(
   path,
@@ -1849,8 +2106,7 @@ async function api(
 ){
 
   const isForm =
-    options.body instanceof
-    FormData;
+    options.body instanceof FormData;
 
   const headers = {
     ...authHeaders(!isForm),
@@ -1893,21 +2149,28 @@ async function api(
       );
 
       updateNav();
+
     }
 
     throw new Error(
       data.message ||
       `Request failed (${response.status})`
     );
+
   }
 
   return data;
+
 }
+
 
 function saveSession(data){
 
   token = data.token;
-  currentUser = data.user;
+
+  currentUser =
+    data.user;
+
   currentRole =
     currentUser.role;
 
@@ -1924,8 +2187,13 @@ function saveSession(data){
   );
 
   updateNav();
-  showView(currentRole);
+
+  showView(
+    currentRole
+  );
+
 }
+
 
 async function login(
   email,
@@ -1937,6 +2205,7 @@ async function login(
       '/auth/login',
       {
         method:'POST',
+
         body:
           JSON.stringify({
             email,
@@ -1946,7 +2215,9 @@ async function login(
     );
 
   saveSession(data);
+
 }
+
 
 $('studentLoginForm')
   .addEventListener(
@@ -1974,9 +2245,12 @@ $('studentLoginForm')
           'authMsg',
           err.message
         );
+
       }
+
     }
   );
+
 
 $('staffLoginForm')
   .addEventListener(
@@ -2004,9 +2278,12 @@ $('staffLoginForm')
           'authMsg',
           err.message
         );
+
       }
+
     }
   );
+
 
 $('adminLoginForm')
   .addEventListener(
@@ -2034,9 +2311,12 @@ $('adminLoginForm')
           'authMsg',
           err.message
         );
+
       }
+
     }
   );
+
 
 $('studentSignupForm')
   .addEventListener(
@@ -2054,8 +2334,10 @@ $('studentSignupForm')
             '/auth/register',
             {
               method:'POST',
+
               body:
                 JSON.stringify({
+
                   name:
                     $('signupName')
                       .value
@@ -2074,6 +2356,7 @@ $('studentSignupForm')
                   password:
                     $('signupPassword')
                       .value
+
                 })
             }
           );
@@ -2086,9 +2369,12 @@ $('studentSignupForm')
           'authMsg',
           err.message
         );
+
       }
+
     }
   );
+
 
 const uploadArea =
   $('uploadArea');
@@ -2096,37 +2382,53 @@ const uploadArea =
 const photoInput =
   $('photoUpload');
 
+
 uploadArea.addEventListener(
   'click',
   () =>
     photoInput.click()
 );
 
-['dragenter','dragover']
+
+[
+  'dragenter',
+  'dragover'
+]
   .forEach(
     ev =>
       uploadArea.addEventListener(
         ev,
         e => {
+
           e.preventDefault();
+
           uploadArea.style.background =
             '#eef1ff';
+
         }
       )
   );
 
-['dragleave','drop']
+
+[
+  'dragleave',
+  'drop'
+]
   .forEach(
     ev =>
       uploadArea.addEventListener(
         ev,
         e => {
+
           e.preventDefault();
+
           uploadArea.style.background =
             '';
+
         }
       )
   );
+
 
 uploadArea.addEventListener(
   'drop',
@@ -2142,14 +2444,18 @@ uploadArea.addEventListener(
         e.dataTransfer.files;
 
       handleFile();
+
     }
+
   }
 );
+
 
 photoInput.addEventListener(
   'change',
   handleFile
 );
+
 
 function handleFile(){
 
@@ -2174,7 +2480,9 @@ function handleFile(){
       .add('hidden');
 
     return;
+
   }
+
 
   if(
     !f.type.startsWith(
@@ -2189,10 +2497,13 @@ function handleFile(){
     photoInput.value = '';
 
     return;
+
   }
+
 
   const r =
     new FileReader();
+
 
   r.onload =
     e => {
@@ -2203,10 +2514,14 @@ function handleFile(){
       $('filePreview')
         .classList
         .remove('hidden');
+
     };
 
+
   r.readAsDataURL(f);
+
 }
+
 
 $('complaintForm')
   .addEventListener(
@@ -2223,19 +2538,23 @@ $('complaintForm')
       );
 
       btn.disabled = true;
+
       btn.textContent =
         'Submitting & analyzing with AI...';
+
 
       try{
 
         const fd =
           new FormData();
 
+
         fd.append(
           'category',
           $('complaintCategory')
             .value
         );
+
 
         fd.append(
           'description',
@@ -2244,15 +2563,20 @@ $('complaintForm')
             .trim()
         );
 
+
         const photo =
           photoInput.files?.[0];
 
+
         if(photo){
+
           fd.append(
             'photo',
             photo
           );
+
         }
+
 
         const d =
           await api(
@@ -2263,8 +2587,10 @@ $('complaintForm')
             }
           );
 
+
         setMsg(
           'studentSubmitMsg',
+
           `Complaint submitted successfully. ID: ${
             d.complaint?.id ||
             'generated'
@@ -2273,16 +2599,22 @@ $('complaintForm')
               ? ' • AI analysis completed'
               : ' • AI analysis unavailable'
           }`,
+
           'success'
         );
 
+
         e.target.reset();
+
 
         $('filePreview')
           .classList
           .add('hidden');
 
-        $('previewImg').src = '';
+
+        $('previewImg').src =
+          '';
+
 
         await refreshStudent();
 
@@ -2299,9 +2631,12 @@ $('complaintForm')
 
         btn.textContent =
           'Submit Complaint';
+
       }
+
     }
   );
+
 
 async function refreshStudent(){
 
@@ -2309,6 +2644,7 @@ async function refreshStudent(){
     !token ||
     currentRole !== 'student'
   ) return;
+
 
   $('studentUserChip')
     .textContent =
@@ -2318,14 +2654,18 @@ async function refreshStudent(){
         currentUser?.email || ''
       }`;
 
+
   $('studentName').value =
     currentUser?.name || '';
+
 
   $('studentPhone').value =
     currentUser?.phone || '';
 
+
   $('studentEmail').value =
     currentUser?.email || '';
+
 
   try{
 
@@ -2334,10 +2674,13 @@ async function refreshStudent(){
         '/complaints/mine'
       );
 
+
     studentComplaints =
       d.complaints || [];
 
+
     renderStudentStats();
+
 
     $('studentComplaints')
       .innerHTML =
@@ -2351,9 +2694,15 @@ async function refreshStudent(){
                   )
               )
               .join('')
-          : '<div class="empty">No complaints submitted yet.</div>';
 
-    loadPhotoThumbs();
+          : `
+              <div class="empty">
+                No complaints submitted yet.
+              </div>
+            `;
+
+
+    await loadPhotoThumbs();
 
   }catch(err){
 
@@ -2361,13 +2710,17 @@ async function refreshStudent(){
       'studentSubmitMsg',
       err.message
     );
+
   }
+
 }
+
 
 function renderStudentStats(){
 
   const c =
     studentComplaints;
+
 
   const count =
     s =>
@@ -2376,8 +2729,10 @@ function renderStudentStats(){
           x.status === s
       ).length;
 
+
   $('studentStats')
     .innerHTML = `
+
       <div class="stat">
         <b>${c.length}</b>
         <span>Total Complaints</span>
@@ -2403,8 +2758,11 @@ function renderStudentStats(){
         }</b>
         <span>Completed</span>
       </div>
+
     `;
+
 }
+
 
 async function refreshStaff(){
 
@@ -2412,6 +2770,7 @@ async function refreshStaff(){
     !token ||
     currentRole !== 'staff'
   ) return;
+
 
   $('staffUserChip')
     .textContent =
@@ -2422,6 +2781,7 @@ async function refreshStaff(){
         'Staff'
       }`;
 
+
   try{
 
     const d =
@@ -2429,10 +2789,13 @@ async function refreshStaff(){
         '/complaints/assigned'
       );
 
+
     staffComplaints =
       d.complaints || [];
 
+
     renderStaffStats();
+
 
     $('staffComplaints')
       .innerHTML =
@@ -2446,26 +2809,36 @@ async function refreshStaff(){
                   )
               )
               .join('')
-          : '<div class="empty">No complaints are currently assigned to you.</div>';
 
-    loadPhotoThumbs();
+          : `
+              <div class="empty">
+                No complaints are currently assigned to you.
+              </div>
+            `;
+
+
+    await loadPhotoThumbs();
 
   }catch(err){
 
     $('staffComplaints')
       .innerHTML =
-        `<div class="empty">${
-          escapeHtml(
-            err.message
-          )
-        }</div>`;
+        `
+          <div class="empty">
+            ${escapeHtml(err.message)}
+          </div>
+        `;
+
   }
+
 }
+
 
 function renderStaffStats(){
 
   const c =
     staffComplaints;
+
 
   const count =
     s =>
@@ -2474,8 +2847,10 @@ function renderStaffStats(){
           x.status === s
       ).length;
 
+
   $('staffStats')
     .innerHTML = `
+
       <div class="stat">
         <b>${c.length}</b>
         <span>Assigned</span>
@@ -2498,8 +2873,11 @@ function renderStaffStats(){
         }</b>
         <span>Completed</span>
       </div>
+
     `;
+
 }
+
 
 async function refreshAdmin(){
 
@@ -2508,28 +2886,36 @@ async function refreshAdmin(){
     currentRole !== 'admin'
   ) return;
 
+
   $('adminUserChip')
     .textContent =
       `${
         currentUser?.email || ''
       } • Administrator`;
 
+
   try{
 
     const s =
-      await api('/staff');
+      await api(
+        '/staff'
+      );
+
 
     staffList =
       s.staff || [];
+
 
     const st =
       await api(
         '/admin/stats'
       );
 
+
     renderAdminStats(
       st.stats || {}
     );
+
 
     await loadAdminComplaints();
 
@@ -2537,18 +2923,22 @@ async function refreshAdmin(){
 
     $('adminComplaints')
       .innerHTML =
-        `<div class="empty">${
-          escapeHtml(
-            err.message
-          )
-        }</div>`;
+        `
+          <div class="empty">
+            ${escapeHtml(err.message)}
+          </div>
+        `;
+
   }
+
 }
+
 
 function renderAdminStats(s){
 
   $('adminStats')
     .innerHTML = `
+
       <div class="stat">
         <b>${s.total ?? 0}</b>
         <span>Total Complaints</span>
@@ -2568,8 +2958,11 @@ function renderAdminStats(s){
         <b>${s.completed ?? 0}</b>
         <span>Completed</span>
       </div>
+
     `;
+
 }
+
 
 async function loadAdminComplaints(){
 
@@ -2578,8 +2971,10 @@ async function loadAdminComplaints(){
     currentRole !== 'admin'
   ) return;
 
+
   const p =
     new URLSearchParams();
+
 
   if(
     $('adminSearch')
@@ -2593,7 +2988,9 @@ async function loadAdminComplaints(){
         .value
         .trim()
     );
+
   }
+
 
   if(
     $('adminStatus').value
@@ -2603,7 +3000,9 @@ async function loadAdminComplaints(){
       'status',
       $('adminStatus').value
     );
+
   }
+
 
   if(
     $('adminCategory').value
@@ -2614,12 +3013,15 @@ async function loadAdminComplaints(){
       $('adminCategory')
         .value
     );
+
   }
+
 
   p.set(
     'limit',
     '100'
   );
+
 
   try{
 
@@ -2629,8 +3031,10 @@ async function loadAdminComplaints(){
         p.toString()
       );
 
+
     adminComplaints =
       d.complaints || [];
+
 
     $('adminCountChip')
       .textContent =
@@ -2638,6 +3042,7 @@ async function loadAdminComplaints(){
           d.pagination?.total ??
           adminComplaints.length
         } complaints`;
+
 
     $('adminComplaints')
       .innerHTML =
@@ -2651,21 +3056,30 @@ async function loadAdminComplaints(){
                   )
               )
               .join('')
-          : '<div class="empty">No complaints found.</div>';
 
-    loadPhotoThumbs();
+          : `
+              <div class="empty">
+                No complaints found.
+              </div>
+            `;
+
+
+    await loadPhotoThumbs();
 
   }catch(err){
 
     $('adminComplaints')
       .innerHTML =
-        `<div class="empty">${
-          escapeHtml(
-            err.message
-          )
-        }</div>`;
+        `
+          <div class="empty">
+            ${escapeHtml(err.message)}
+          </div>
+        `;
+
   }
+
 }
+
 
 $('adminSearch')
   .addEventListener(
@@ -2675,10 +3089,14 @@ $('adminSearch')
       if(
         e.key === 'Enter'
       ){
+
         loadAdminComplaints();
+
       }
+
     }
   );
+
 
 $('adminStatus')
   .addEventListener(
@@ -2686,47 +3104,49 @@ $('adminStatus')
     loadAdminComplaints
   );
 
+
 $('adminCategory')
   .addEventListener(
     'change',
     loadAdminComplaints
   );
 
-/*
-|--------------------------------------------------------------------------
-| AI ANALYSIS UI
-|--------------------------------------------------------------------------
-*/
+
+/* =========================================================
+   AI
+   ========================================================= */
+
 
 function priorityLabel(
   priority
 ){
 
-  return (
-    String(
-      priority || ''
-    )
-      .toLowerCase()
-      .replace(
-        /^./,
-        c =>
-          c.toUpperCase()
-      )
-  );
+  return String(
+    priority || ''
+  )
+    .toLowerCase()
+    .replace(
+      /^./,
+      c =>
+        c.toUpperCase()
+    );
+
 }
 
-function renderAiAnalysis(
-  c
-){
+
+function renderAiAnalysis(c){
 
   const ai =
     c?.aiAnalysis;
+
 
   if(!ai){
 
     return `
       <div class="ai-box">
+
         <div class="ai-header">
+
           <div class="ai-title">
             🤖 AI Analysis
           </div>
@@ -2734,19 +3154,24 @@ function renderAiAnalysis(
           <span class="ai-status">
             Not available
           </span>
+
         </div>
 
         <div class="ai-empty">
           AI analysis is not available for this complaint yet.
         </div>
+
       </div>
     `;
+
   }
+
 
   const priority =
     String(
       ai.priority || 'medium'
     ).toLowerCase();
+
 
   const priorityClass =
     [
@@ -2755,8 +3180,11 @@ function renderAiAnalysis(
       'high',
       'critical'
     ].includes(priority)
+
       ? `priority-${priority}`
+
       : 'priority-medium';
+
 
   return `
     <div class="ai-box">
@@ -2771,26 +3199,39 @@ function renderAiAnalysis(
           class="ai-status ${priorityClass}"
         >
           ${escapeHtml(
-            priorityLabel(priority)
+            priorityLabel(
+              priority
+            )
           )} Priority
         </span>
 
       </div>
 
+
       <div class="ai-grid">
 
         <div class="ai-item">
-          <strong>SUMMARY</strong>
+
+          <strong>
+            SUMMARY
+          </strong>
+
           <span>
             ${escapeHtml(
               ai.summary ||
               'No summary available.'
             )}
           </span>
+
         </div>
 
+
         <div class="ai-item">
-          <strong>SUGGESTED CATEGORY</strong>
+
+          <strong>
+            SUGGESTED CATEGORY
+          </strong>
+
           <span>
             ${escapeHtml(
               ai.suggestedCategory ||
@@ -2798,20 +3239,32 @@ function renderAiAnalysis(
               '-'
             )}
           </span>
+
         </div>
 
+
         <div class="ai-item">
-          <strong>DEPARTMENT</strong>
+
+          <strong>
+            DEPARTMENT
+          </strong>
+
           <span>
             ${escapeHtml(
               ai.department ||
               'Concerned Department'
             )}
           </span>
+
         </div>
 
+
         <div class="ai-item">
-          <strong>CONFIDENCE</strong>
+
+          <strong>
+            CONFIDENCE
+          </strong>
+
           <span>
             ${escapeHtml(
               priorityLabel(
@@ -2820,42 +3273,56 @@ function renderAiAnalysis(
               )
             )}
           </span>
+
         </div>
 
       </div>
 
+
       <div class="ai-item">
-        <strong>RECOMMENDED ACTION</strong>
+
+        <strong>
+          RECOMMENDED ACTION
+        </strong>
+
         <span>
           ${escapeHtml(
             ai.recommendation ||
             'Review the complaint and take appropriate action.'
           )}
         </span>
+
       </div>
+
 
       <div
         class="ai-item"
         style="margin-top:9px"
       >
-        <strong>STAFF WORK NOTE</strong>
+
+        <strong>
+          STAFF WORK NOTE
+        </strong>
+
         <span>
           ${escapeHtml(
             ai.workNote ||
             'Please review and handle this complaint.'
           )}
         </span>
+
       </div>
 
     </div>
   `;
+
 }
 
-/*
-|--------------------------------------------------------------------------
-| COMPLAINT CARD
-|--------------------------------------------------------------------------
-*/
+
+/* =========================================================
+   COMPLAINT CARD
+   ========================================================= */
+
 
 function complaintCard(
   c,
@@ -2866,12 +3333,15 @@ function complaintCard(
     c.assignedTo?.name ||
     'Not assigned';
 
+
   const safeId =
     encodeURIComponent(
       c.id
     );
 
+
   let photo = '';
+
 
   if(c.photoUrl){
 
@@ -2895,9 +3365,12 @@ function complaintCard(
 
       </div>
     `;
+
   }
 
+
   let controls = '';
+
 
   if(role === 'admin'){
 
@@ -2932,6 +3405,7 @@ function complaintCard(
         )
         .join('');
 
+
     controls += `
       <div style="margin-top:12px">
 
@@ -2954,7 +3428,9 @@ function complaintCard(
 
       </div>
     `;
+
   }
+
 
   if(
     role === 'admin' ||
@@ -3033,6 +3509,7 @@ function complaintCard(
 
       </div>
 
+
       <div style="margin-top:8px">
 
         <input
@@ -3043,7 +3520,9 @@ function complaintCard(
 
       </div>
     `;
+
   }
+
 
   return `
     <div class="card">
@@ -3052,25 +3531,30 @@ function complaintCard(
         ${escapeHtml(c.id)}
       </h3>
 
+
       <p>
         <strong>Student:</strong>
         ${escapeHtml(c.name || '-')}
       </p>
+
 
       <p>
         <strong>Email:</strong>
         ${escapeHtml(c.email || '-')}
       </p>
 
+
       <p>
         <strong>Phone:</strong>
         ${escapeHtml(c.phone || '-')}
       </p>
 
+
       <p>
         <strong>Category:</strong>
         ${escapeHtml(c.category || '-')}
       </p>
+
 
       <p>
         <strong>Description:</strong>
@@ -3079,14 +3563,18 @@ function complaintCard(
         )}
       </p>
 
+
       <p>
         <strong>Assigned to:</strong>
         ${escapeHtml(assigned)}
       </p>
 
+
       ${photo}
 
+
       ${renderAiAnalysis(c)}
+
 
       <div class="row">
 
@@ -3098,6 +3586,7 @@ function complaintCard(
           ${statusLabel(c.status)}
         </span>
 
+
         <span class="muted">
           ${escapeHtml(
             formatDate(
@@ -3108,7 +3597,9 @@ function complaintCard(
 
       </div>
 
+
       ${controls}
+
 
       <div style="margin-top:14px">
 
@@ -3123,7 +3614,14 @@ function complaintCard(
 
     </div>
   `;
+
 }
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
 
 async function updateStatus(
   encodedId,
@@ -3136,10 +3634,12 @@ async function updateStatus(
       encodedId
     );
 
+
   const msgEl =
     $(
       `msg-${id}-${role}`
     );
+
 
   try{
 
@@ -3149,6 +3649,7 @@ async function updateStatus(
       '/status',
       {
         method:'PATCH',
+
         body:
           JSON.stringify({
             status,
@@ -3158,6 +3659,7 @@ async function updateStatus(
           })
       }
     );
+
 
     if(role === 'staff')
       await refreshStaff();
@@ -3169,8 +3671,16 @@ async function updateStatus(
     alert(
       err.message
     );
+
   }
+
 }
+
+
+/* =========================================================
+   ASSIGN STAFF
+   ========================================================= */
+
 
 async function assignComplaint(
   encodedId,
@@ -3182,6 +3692,7 @@ async function assignComplaint(
       encodedId
     );
 
+
   try{
 
     await api(
@@ -3190,6 +3701,7 @@ async function assignComplaint(
       '/assign',
       {
         method:'PATCH',
+
         body:
           JSON.stringify({
             staffId:
@@ -3198,6 +3710,7 @@ async function assignComplaint(
       }
     );
 
+
     await refreshAdmin();
 
   }catch(err){
@@ -3205,12 +3718,22 @@ async function assignComplaint(
     alert(
       err.message
     );
+
   }
+
 }
+
+
+/* =========================================================
+   PHOTO THUMBNAILS
+   ========================================================= */
+
 
 async function loadPhotoThumbs(){
 
-  if(!token) return;
+  if(!token)
+    return;
+
 
   const cards =
     [
@@ -3219,6 +3742,7 @@ async function loadPhotoThumbs(){
           '.thumb-img'
         )
     ];
+
 
   await Promise.all(
     cards.map(
@@ -3235,20 +3759,21 @@ async function loadPhotoThumbs(){
               ''
             );
 
+
         const previous =
           thumbUrls.get(
             img.id
           );
+
 
         if(previous){
 
           URL.revokeObjectURL(
             previous
           );
+
         }
 
-        img.style.display =
-          'block';
 
         try{
 
@@ -3256,21 +3781,22 @@ async function loadPhotoThumbs(){
             await fetch(
               API_BASE +
               '/complaints/' +
-              encodeURIComponent(
-                id
-              ) +
+              encodeURIComponent(id) +
               '/photo',
               {
                 method:'GET',
+
                 headers:{
                   Authorization:
                     'Bearer ' +
                     token
                 },
+
                 cache:
                   'no-store'
               }
             );
+
 
           if(!res.ok){
 
@@ -3285,49 +3811,67 @@ async function loadPhotoThumbs(){
               '0.15';
 
             return;
+
           }
+
 
           const blob =
             await res.blob();
+
 
           if(
             !blob.type.startsWith(
               'image/'
             )
           ){
+
             throw new Error(
               'Invalid image response'
             );
+
           }
+
 
           const url =
             URL.createObjectURL(
               blob
             );
 
+
           thumbUrls.set(
             img.id,
             url
           );
 
+
           img.src =
             url;
+
 
           img.style.opacity =
             '1';
 
-        }catch(err){
+        }catch{
 
           img.alt =
             'Unable to load uploaded image';
 
           img.style.opacity =
             '0.15';
+
         }
+
       }
     )
   );
+
 }
+
+
+/* =========================================================
+   PHOTO MODAL
+   ========================================================= */
+
 
 async function viewPhoto(
   encodedId
@@ -3338,18 +3882,23 @@ async function viewPhoto(
       encodedId
     );
 
+
   const modal =
     $('photoModal');
 
+
   const content =
     $('modalPhotoContent');
+
 
   modal
     .classList
     .remove('hidden');
 
+
   content.innerHTML =
     '<div class="loading">Loading image...</div>';
+
 
   try{
 
@@ -3368,28 +3917,36 @@ async function viewPhoto(
         }
       );
 
+
     if(!res.ok){
 
       let d = {};
 
       try{
+
         d =
           await res.json();
+
       }catch{}
+
 
       throw new Error(
         d.message ||
         'Photo unavailable'
       );
+
     }
+
 
     const blob =
       await res.blob();
+
 
     const url =
       URL.createObjectURL(
         blob
       );
+
 
     content.innerHTML = `
       <img
@@ -3398,24 +3955,29 @@ async function viewPhoto(
       >
     `;
 
+
     content.dataset.objectUrl =
       url;
 
   }catch(err){
 
     content.innerHTML =
-      `<div class="empty">${
-        escapeHtml(
-          err.message
-        )
-      }</div>`;
+      `
+        <div class="empty">
+          ${escapeHtml(err.message)}
+        </div>
+      `;
+
   }
+
 }
+
 
 function closePhotoModal(){
 
   const c =
     $('modalPhotoContent');
+
 
   if(
     c.dataset.objectUrl
@@ -3424,15 +3986,25 @@ function closePhotoModal(){
     URL.revokeObjectURL(
       c.dataset.objectUrl
     );
+
   }
+
 
   c.dataset.objectUrl =
     '';
 
+
   $('photoModal')
     .classList
     .add('hidden');
+
 }
+
+
+/* =========================================================
+   TIMELINE
+   ========================================================= */
+
 
 async function viewTimeline(
   encodedId
@@ -3443,6 +4015,7 @@ async function viewTimeline(
       encodedId
     );
 
+
   try{
 
     const d =
@@ -3452,26 +4025,30 @@ async function viewTimeline(
         '/details'
       );
 
+
     const t =
       d.complaint?.timeline ||
       [];
 
+
     const text =
-      t.map(
-        (x,i) =>
-          `${i+1}. ${
-            statusLabel(
-              x.status
-            )
-          } — ${
-            x.message
-          } (${
-            formatDate(
-              x.date
-            )
-          })`
-      )
-      .join('\n\n');
+      t
+        .map(
+          (x,i) =>
+            `${i+1}. ${
+              statusLabel(
+                x.status
+              )
+            } — ${
+              x.message
+            } (${
+              formatDate(
+                x.date
+              )
+            })`
+        )
+        .join('\n\n');
+
 
     alert(
       text ||
@@ -3483,8 +4060,16 @@ async function viewTimeline(
     alert(
       err.message
     );
+
   }
+
 }
+
+
+/* =========================================================
+   TRACKING
+   ========================================================= */
+
 
 $('trackForm')
   .addEventListener(
@@ -3499,6 +4084,7 @@ $('trackForm')
         .classList
         .add('hidden');
 
+
       try{
 
         const id =
@@ -3507,11 +4093,13 @@ $('trackForm')
             .trim()
             .toUpperCase();
 
+
         const d =
           await api(
             '/complaints/' +
             encodeURIComponent(id)
           );
+
 
         renderTrack(
           d.complaint
@@ -3523,9 +4111,12 @@ $('trackForm')
           'trackMsg',
           err.message
         );
+
       }
+
     }
   );
+
 
 function renderTrack(c){
 
@@ -3573,6 +4164,7 @@ function renderTrack(c){
       )
       .join('');
 
+
   const evidence =
     c.photoUrl
       ? `
@@ -3583,6 +4175,13 @@ function renderTrack(c){
         </p>
       `
       : '';
+
+
+  const aiTrack =
+    c.aiAnalysis
+      ? renderAiAnalysis(c)
+      : '';
+
 
   $('trackResult')
     .innerHTML = `
@@ -3598,17 +4197,18 @@ function renderTrack(c){
           )}
         </h3>
 
+
         <p>
           <strong>Complaint ID:</strong>
           ${escapeHtml(c.id)}
         </p>
 
+
         <p>
           <strong>Category:</strong>
-          ${escapeHtml(
-            c.category
-          )}
+          ${escapeHtml(c.category)}
         </p>
+
 
         <p>
           <strong>Description:</strong>
@@ -3616,6 +4216,7 @@ function renderTrack(c){
             c.description
           )}
         </p>
+
 
         <p>
           <strong>Submitted:</strong>
@@ -3626,7 +4227,9 @@ function renderTrack(c){
           )}
         </p>
 
+
         ${evidence}
+
 
         <div class="row">
 
@@ -3640,6 +4243,7 @@ function renderTrack(c){
             )}
           </span>
 
+
           <span class="muted">
             Updated:
             ${escapeHtml(
@@ -3651,17 +4255,26 @@ function renderTrack(c){
 
         </div>
 
+
+        ${aiTrack}
+
+
         <div style="margin-top:18px">
 
           <h4>
             Status Timeline
           </h4>
 
+
           <div class="timeline">
 
             ${
               timeline ||
-              '<div class="empty">No timeline entries.</div>'
+              `
+                <div class="empty">
+                  No timeline entries.
+                </div>
+              `
             }
 
           </div>
@@ -3671,10 +4284,18 @@ function renderTrack(c){
       </div>
     `;
 
+
   $('trackResult')
     .classList
     .remove('hidden');
+
 }
+
+
+/* =========================================================
+   STAFF CREATE
+   ========================================================= */
+
 
 $('staffCreateForm')
   .addEventListener(
@@ -3687,6 +4308,7 @@ $('staffCreateForm')
         'staffCreateMsg'
       );
 
+
       try{
 
         const d =
@@ -3694,8 +4316,10 @@ $('staffCreateForm')
             '/auth/staff',
             {
               method:'POST',
+
               body:
                 JSON.stringify({
+
                   name:
                     $('newStaffName')
                       .value
@@ -3719,9 +4343,11 @@ $('staffCreateForm')
                   password:
                     $('newStaffPassword')
                       .value
+
                 })
             }
           );
+
 
         setMsg(
           'staffCreateMsg',
@@ -3732,15 +4358,19 @@ $('staffCreateForm')
           'success'
         );
 
+
         e.target.reset();
+
 
         const s =
           await api(
             '/staff'
           );
 
+
         staffList =
           s.staff || [];
+
 
         await loadAdminComplaints();
 
@@ -3750,13 +4380,22 @@ $('staffCreateForm')
           'staffCreateMsg',
           err.message
         );
+
       }
+
     }
   );
+
+
+/* =========================================================
+   BOOT
+   ========================================================= */
+
 
 async function boot(){
 
   updateNav();
+
 
   if(token){
 
@@ -3767,11 +4406,14 @@ async function boot(){
           '/auth/me'
         );
 
+
       currentUser =
         d.user;
 
+
       currentRole =
         currentUser.role;
+
 
       sessionStorage.setItem(
         'cc_user',
@@ -3780,24 +4422,39 @@ async function boot(){
         )
       );
 
+
       showView(
         currentRole
       );
 
     }catch{
 
-      showView(
-        'home'
+      token = '';
+      currentUser = null;
+      currentRole = '';
+
+      sessionStorage.removeItem(
+        'cc_token'
       );
+
+      sessionStorage.removeItem(
+        'cc_user'
+      );
+
+      updateNav();
+
+      showView('home');
+
     }
 
   }else{
 
-    showView(
-      'home'
-    );
+    showView('home');
+
   }
+
 }
+
 
 boot();
 
