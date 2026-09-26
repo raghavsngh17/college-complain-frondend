@@ -482,7 +482,13 @@ button{
   z-index:50;
 }
 
+.modal{
+  z-index:10000;
+}
+
 .modal-inner{
+  position:relative;
+  z-index:10001;
   background:#fff;
   border-radius:16px;
   max-width:900px;
@@ -490,6 +496,17 @@ button{
   max-height:92vh;
   overflow:auto;
   padding:18px;
+}
+
+/* Keep Leaflet layers inside their own map and below the modal. */
+.modal .leaflet-container{
+  z-index:0;
+}
+
+.modal .leaflet-pane,
+.modal .leaflet-top,
+.modal .leaflet-bottom{
+  z-index:400;
 }
 
 .modal-head{
@@ -802,7 +819,7 @@ button{
 
 #locationModalMap{
   width:100%;
-  height:58vh;
+  height:min(62vh,520px);
   min-height:360px;
   border-radius:12px;
   overflow:hidden;
@@ -2890,6 +2907,8 @@ function openComplaintMap(
     .classList
     .remove('hidden');
 
+  document.body.style.overflow = 'hidden';
+
   initComplaintMap();
 
   setTimeout(
@@ -3273,6 +3292,8 @@ function closeLocationModal(){
   $('locationModal')
     .classList
     .add('hidden');
+
+  document.body.style.overflow = '';
 
 }
 
