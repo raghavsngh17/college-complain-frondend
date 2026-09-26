@@ -818,6 +818,32 @@ button{
   line-height:1.5;
 }
 
+/* Inline map shown directly inside Staff/Admin complaint cards */
+.complaint-location-inline{
+  margin-top:14px;
+}
+
+.complaint-inline-map{
+  width:100%;
+  height:250px;
+  margin-top:10px;
+  border:1px solid #ddd6fe;
+  border-radius:12px;
+  overflow:hidden;
+  background:#f3f4f6;
+}
+
+.complaint-inline-map .leaflet-control-attribution{
+  font-size:10px;
+}
+
+.inline-location-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
 .leaflet-container{
   font-family:'Segoe UI',Tahoma,Verdana,sans-serif;
 }
@@ -2080,6 +2106,7 @@ let staffComplaints = [];
 let adminComplaints = [];
 let staffList = [];
 let thumbUrls = new Map();
+let inlineComplaintMaps = new Map();
 
 
 const $ = id =>
@@ -3211,6 +3238,36 @@ function openExternalDirections(){
 }
 
 
+function openExternalDirectionsForComplaint(
+  encodedId
+){
+
+  const id =
+    decodeURIComponent(
+      encodedId
+    );
+
+  const target =
+    complaintLocationRegistry.get(
+      id
+    );
+
+  if(!target){
+    alert(
+      'Complaint location is not available.'
+    );
+    return;
+  }
+
+  currentComplaintMapTarget = {
+    ...target
+  };
+
+  openExternalDirections();
+
+}
+
+
 function closeLocationModal(){
 
   $('locationModal')
@@ -3897,6 +3954,9 @@ async function refreshStudent(){
     renderStudentStats();
 
 
+    destroyInlineComplaintMaps('studentComplaints');
+
+
     $('studentComplaints')
       .innerHTML =
         studentComplaints.length
@@ -3915,6 +3975,9 @@ async function refreshStudent(){
                 No complaints submitted yet.
               </div>
             `;
+
+
+    initInlineComplaintMaps('studentComplaints');
 
 
     await loadPhotoThumbs();
@@ -4012,6 +4075,9 @@ async function refreshStaff(){
     renderStaffStats();
 
 
+    destroyInlineComplaintMaps('staffComplaints');
+
+
     $('staffComplaints')
       .innerHTML =
         staffComplaints.length
@@ -4030,6 +4096,9 @@ async function refreshStaff(){
                 No complaints are currently assigned to you.
               </div>
             `;
+
+
+    initInlineComplaintMaps('staffComplaints');
 
 
     await loadPhotoThumbs();
@@ -4135,6 +4204,9 @@ async function refreshAdmin(){
     await loadAdminComplaints();
 
   }catch(err){
+
+    destroyInlineComplaintMaps('adminComplaints');
+
 
     $('adminComplaints')
       .innerHTML =
@@ -4277,6 +4349,9 @@ async function loadAdminComplaints(){
                 No complaints found.
               </div>
             `;
+
+
+    initInlineComplaintMaps('adminComplaints');
 
 
     await loadPhotoThumbs();
@@ -4535,6 +4610,188 @@ function renderAiAnalysis(c){
 
 
 /* =========================================================
+   INLINE COMPLAINT MAPS
+   ========================================================= */
+
+
+function destroyInlineComplaintMaps(
+  containerId
+){
+
+  const root = $(containerId);
+  if(!root) return;
+
+  root.querySelectorAll('.complaint-inline-map')
+    .forEach(el => {
+
+      const map =
+        inlineComplaintMaps.get(el.id);
+
+      if(map){
+        map.remove();
+        inlineComplaintMaps.delete(el.id);
+      }
+
+    });
+
+}
+
+
+function initInlineComplaintMaps(
+  containerId
+){
+
+  if(!window.L) return;
+
+  const root = $(containerId);
+  if(!root) return;
+
+  root.querySelectorAll('.complaint-inline-map')
+    .forEach(el => {
+
+      if(inlineComplaintMaps.has(el.id)) return;
+
+      const lat =
+        Number(el.dataset.lat);
+
+      const lng =
+        Number(el.dataset.lng);
+
+      const name =
+        el.dataset.name ||
+        'Complaint Location';
+
+      if(
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng)
+      ) return;
+
+      const map =
+        L.map(
+          el,
+          {
+            scrollWheelZoom:false
+          }
+        ).setView(
+          [lat,lng],
+          18
+        );
+
+      L.tileLayer(
+        OSM_TILE_URL,
+        {
+          maxZoom:20,
+          attribution:campusAttribution
+        }
+      ).addTo(map);
+
+      L.marker([lat,lng])
+        .addTo(map)
+        .bindPopup(
+          `<strong>${escapeHtml(name)}</strong><br>Complaint destination`
+        )
+        .openPopup();
+
+      inlineComplaintMaps.set(
+        el.id,
+        map
+      );
+
+      setTimeout(
+        () => map.invalidateSize(),
+        80
+      );
+
+    });
+
+}
+
+
+function renderInlineComplaintLocation(
+  complaint,
+  role
+){
+
+  const loc =
+    extractComplaintLocation(
+      complaint
+    );
+
+  if(!loc) return '';
+
+  rememberComplaintLocation(
+    complaint
+  );
+
+  const safeId =
+    encodeURIComponent(
+      String(complaint?.id || '')
+    );
+
+  const mapId =
+    `inline-map-${safeId}-${role}`;
+
+  return `
+    <div class="location-box complaint-location-inline">
+
+      <div class="location-box-title">
+        📍 Complaint Location
+      </div>
+
+      <p>
+        <strong>${escapeHtml(loc.name)}</strong>
+      </p>
+
+      <div
+        id="${mapId}"
+        class="complaint-inline-map"
+        data-lat="${escapeHtml(loc.lat)}"
+        data-lng="${escapeHtml(loc.lng)}"
+        data-name="${escapeHtml(loc.name)}"
+      ></div>
+
+      <div class="inline-location-actions">
+
+        <button
+          class="btn primary small"
+          type="button"
+          onclick="openComplaintMap('${safeId}');setTimeout(routeToComplaintLocation,300)"
+        >
+          🧭 Get Directions
+        </button>
+
+        <button
+          class="btn secondary small"
+          type="button"
+          onclick="openComplaintMap('${safeId}')"
+        >
+          🗺️ Open Full Map
+        </button>
+
+        <button
+          class="btn secondary small"
+          type="button"
+          onclick="openExternalDirectionsForComplaint('${safeId}')"
+        >
+          🚗 Open Navigation
+        </button>
+
+      </div>
+
+      <p
+        class="muted"
+        style="margin-top:8px!important;font-size:.82rem"
+      >
+        Map shows the exact pin selected by the student.
+      </p>
+
+    </div>
+  `;
+
+}
+
+
+/* =========================================================
    COMPLAINT CARD
    ========================================================= */
 
@@ -4774,9 +5031,14 @@ function complaintCard(
       <p>
         <strong>Description:</strong>
         ${escapeHtml(
-          c.description || '-'
+          cleanComplaintDescription(
+            c.description || '-'
+          )
         )}
       </p>
+
+
+      ${renderInlineComplaintLocation(c, role)}
 
 
       <p>
