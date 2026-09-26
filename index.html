@@ -739,7 +739,99 @@ button{
     grid-template-columns:1fr;
   }
 }
+
+/* =========================================================
+   CAMPUS MAP
+   ========================================================= */
+
+.campus-map-wrap{
+  margin-top:10px;
+}
+
+.campus-map{
+  width:100%;
+  height:320px;
+  border:1px solid #ddd6fe;
+  border-radius:12px;
+  overflow:hidden;
+  background:#f3f4f6;
+}
+
+.location-toolbar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-top:9px;
+}
+
+.location-status{
+  margin-top:9px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+  color:#4b5563;
+  font-size:.86rem;
+  line-height:1.45;
+}
+
+.location-box{
+  margin-top:12px;
+  padding:12px;
+  border-radius:11px;
+  background:#f8fafc;
+  border:1px solid #dbeafe;
+}
+
+.location-box-title{
+  font-weight:900;
+  color:#1e40af;
+  margin-bottom:5px;
+}
+
+.location-box p{
+  margin-bottom:8px!important;
+}
+
+.location-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+#locationModalMap{
+  width:100%;
+  height:58vh;
+  min-height:360px;
+  border-radius:12px;
+  overflow:hidden;
+  background:#f3f4f6;
+}
+
+.location-info{
+  margin-top:12px;
+  padding:12px;
+  border-radius:10px;
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+  line-height:1.5;
+}
+
+.leaflet-container{
+  font-family:'Segoe UI',Tahoma,Verdana,sans-serif;
+}
+
 </style>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
 </head>
 
 <body>
@@ -1357,6 +1449,61 @@ button{
           </div>
 
 
+
+          <div class="field">
+
+            <label>
+              📍 Complaint Location (Campus)
+            </label>
+
+            <select
+              id="complaintLocation"
+              required
+            >
+              <option value="">
+                -- Select Campus Location --
+              </option>
+            </select>
+
+            <div class="campus-map-wrap">
+
+              <div
+                id="studentLocationMap"
+                class="campus-map"
+              ></div>
+
+              <div class="location-toolbar">
+
+                <button
+                  class="btn secondary small"
+                  type="button"
+                  onclick="resetStudentMapPin()"
+                >
+                  ↺ Reset Pin
+                </button>
+
+                <button
+                  class="btn secondary small"
+                  type="button"
+                  onclick="centerStudentCampusMap()"
+                >
+                  🏫 Center Campus
+                </button>
+
+              </div>
+
+              <div
+                id="studentLocationStatus"
+                class="location-status"
+              >
+                Select a campus location above, then click the exact spot on the map.
+              </div>
+
+            </div>
+
+          </div>
+
+
           <div class="field">
 
             <label>Description</label>
@@ -1785,10 +1932,137 @@ button{
 </div>
 
 
+<!-- LOCATION / DIRECTIONS MODAL -->
+
+<div
+  id="locationModal"
+  class="modal hidden"
+  onclick="if(event.target===this)closeLocationModal()"
+>
+
+  <div class="modal-inner">
+
+    <div class="modal-head">
+
+      <div>
+        <h3>📍 Complaint Location & Directions</h3>
+        <div
+          id="locationModalTitle"
+          class="muted"
+          style="margin-top:4px"
+        ></div>
+      </div>
+
+      <button
+        class="btn danger small"
+        onclick="closeLocationModal()"
+      >
+        Close
+      </button>
+
+    </div>
+
+    <div id="locationModalMap"></div>
+
+    <div
+      id="locationModalInfo"
+      class="location-info"
+    ></div>
+
+    <div
+      style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"
+    >
+
+      <button
+        class="btn primary"
+        onclick="routeToComplaintLocation()"
+      >
+        🧭 Use My Location & Show Route
+      </button>
+
+      <button
+        class="btn secondary"
+        onclick="openExternalDirections()"
+      >
+        🚗 Open Navigation
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
 <script>
 
 const API_BASE =
   'https://college-complain-backend.onrender.com/api';
+
+
+/* =========================================================
+   FREE CAMPUS MAP (Leaflet + OpenStreetMap)
+   Official CUTM Paralakhemundi campus reference point:
+   18°48'26"N, 84°08'27"E
+   ========================================================= */
+
+const CAMPUS_CENTER =
+  [18.807222, 84.140833];
+
+const CAMPUS_LOCATIONS = [
+  'H1 Boys Hostel',
+  'H2 Boys Hostel',
+  'H3 Boys Hostel',
+  'H4 Boys Hostel',
+  'H5 Boys Hostel',
+  'Other Boys Hostel',
+  'Girls Hostel',
+  'CRC-1 Building',
+  'CRC-2 Building',
+  'ITI Building',
+  'MBA Building',
+  'Mechanical Department Building',
+  'Chemical Building',
+  'GTET Building',
+  'Library',
+  'Auditorium',
+  'Student Activity Center',
+  'Central Mess-1',
+  'Central Mess-2',
+  'Power House Station',
+  'Eicher Lab',
+  'Mechanical Lab',
+  'MTRTC / Mini Tool Room',
+  'Old Guest House',
+  'MDC Guest House',
+  'Staff Quarters',
+  'Other Campus Location'
+];
+
+const OSM_TILE_URL =
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+const campusAttribution =
+  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>';
+
+const ROUTER_URL =
+  'https://router.project-osrm.org/route/v1/driving/';
+
+let campusMap = null;
+let campusMarker = null;
+let selectedComplaintLocation = null;
+
+let complaintMap = null;
+let complaintDestinationMarker = null;
+let complaintCurrentMarker = null;
+let complaintRoute = null;
+
+let currentComplaintMapTarget = null;
+
+const complaintLocationRegistry =
+  new Map();
+
 
 let token =
   sessionStorage.getItem('cc_token') || '';
@@ -1929,6 +2203,27 @@ function showView(view){
 
   target.classList.remove('hidden');
 
+  if(view === 'student'){
+    setTimeout(() => {
+      initStudentLocationMap();
+      if(campusMap){
+        campusMap.invalidateSize();
+      }
+    }, 100);
+  }
+
+  if(view === 'staff' || view === 'admin'){
+    setTimeout(() => {
+      document
+        .querySelectorAll('.leaflet-container')
+        .forEach(el => {
+          try{
+            el._leaflet_map?.invalidateSize();
+          }catch{}
+        });
+    }, 100);
+  }
+
   document
     .querySelectorAll(
       '#mainNav button[data-view]'
@@ -2058,10 +2353,877 @@ document
   );
 
 
+
+/* =========================================================
+   CAMPUS LOCATION FUNCTIONS
+   ========================================================= */
+
+function populateComplaintLocations(){
+
+  const select =
+    $('complaintLocation');
+
+  if(!select) return;
+
+  select.innerHTML = `
+    <option value="">
+      -- Select Campus Location --
+    </option>
+  `;
+
+  CAMPUS_LOCATIONS.forEach(
+    name => {
+
+      const option =
+        document.createElement('option');
+
+      option.value = name;
+      option.textContent = name;
+
+      select.appendChild(option);
+
+    }
+  );
+
+  select.addEventListener(
+    'change',
+    () => {
+
+      selectedComplaintLocation =
+        null;
+
+      if(campusMarker){
+
+        campusMap.removeLayer(
+          campusMarker
+        );
+
+        campusMarker = null;
+
+      }
+
+      const name =
+        select.value;
+
+      if(!name){
+
+        setStudentLocationStatus(
+          'Select a campus location above, then click the exact spot on the map.'
+        );
+
+        return;
+
+      }
+
+      setStudentLocationStatus(
+        `<strong>${escapeHtml(name)}</strong> selected.<br>
+         Now click the exact location of ${escapeHtml(name)}
+         on the campus map.`
+      );
+
+      initStudentLocationMap();
+
+      if(campusMap){
+
+        campusMap.setView(
+          CAMPUS_CENTER,
+          17
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+function initStudentLocationMap(){
+
+  if(!window.L) return;
+
+  const mapEl =
+    $('studentLocationMap');
+
+  if(!mapEl) return;
+
+  if(!campusMap){
+
+    campusMap =
+      L.map(
+        mapEl,
+        {
+          scrollWheelZoom:true
+        }
+      ).setView(
+        CAMPUS_CENTER,
+        17
+      );
+
+    L.tileLayer(
+      OSM_TILE_URL,
+      {
+        maxZoom:20,
+        attribution:
+          campusAttribution
+      }
+    ).addTo(
+      campusMap
+    );
+
+    L.marker(
+      CAMPUS_CENTER
+    )
+      .addTo(campusMap)
+      .bindPopup(
+        '<strong>Centurion University - Paralakhemundi Campus</strong><br>Campus reference point'
+      );
+
+    campusMap.on(
+      'click',
+      e => {
+
+        const locationName =
+          $('complaintLocation')?.value;
+
+        if(!locationName){
+
+          setStudentLocationStatus(
+            'Please select a campus location first.'
+          );
+
+          return;
+
+        }
+
+        setStudentLocationPoint(
+          locationName,
+          e.latlng.lat,
+          e.latlng.lng
+        );
+
+      }
+    );
+
+  }
+
+  setTimeout(
+    () => campusMap?.invalidateSize(),
+    50
+  );
+
+}
+
+
+function setStudentLocationPoint(
+  name,
+  lat,
+  lng
+){
+
+  selectedComplaintLocation = {
+    name,
+    lat:Number(lat),
+    lng:Number(lng)
+  };
+
+  if(campusMarker){
+
+    campusMap.removeLayer(
+      campusMarker
+    );
+
+  }
+
+  campusMarker =
+    L.marker(
+      [
+        selectedComplaintLocation.lat,
+        selectedComplaintLocation.lng
+      ]
+    )
+      .addTo(campusMap)
+      .bindPopup(
+        `<strong>${escapeHtml(name)}</strong><br>Complaint location`
+      )
+      .openPopup();
+
+  campusMap.setView(
+    [
+      selectedComplaintLocation.lat,
+      selectedComplaintLocation.lng
+    ],
+    18
+  );
+
+  setStudentLocationStatus(
+    `<strong>📍 ${escapeHtml(name)}</strong><br>
+     Pin set successfully.<br>
+     Latitude: ${selectedComplaintLocation.lat.toFixed(6)} |
+     Longitude: ${selectedComplaintLocation.lng.toFixed(6)}`
+  );
+
+}
+
+
+function resetStudentMapPin(){
+
+  selectedComplaintLocation =
+    null;
+
+  if(campusMarker && campusMap){
+
+    campusMap.removeLayer(
+      campusMarker
+    );
+
+    campusMarker = null;
+
+  }
+
+  const name =
+    $('complaintLocation')?.value;
+
+  if(name){
+
+    setStudentLocationStatus(
+      `<strong>${escapeHtml(name)}</strong> selected.<br>
+       Click the exact location on the map again.`
+    );
+
+  }else{
+
+    setStudentLocationStatus(
+      'Select a campus location above, then click the exact spot on the map.'
+    );
+
+  }
+
+}
+
+
+function centerStudentCampusMap(){
+
+  initStudentLocationMap();
+
+  if(campusMap){
+
+    campusMap.setView(
+      CAMPUS_CENTER,
+      17
+    );
+
+  }
+
+}
+
+
+function setStudentLocationStatus(
+  html
+){
+
+  const el =
+    $('studentLocationStatus');
+
+  if(!el) return;
+
+  el.innerHTML = html;
+
+}
+
+
+function extractComplaintLocation(
+  complaint
+){
+
+  const raw =
+    String(
+      complaint?.description || ''
+    );
+
+  const match =
+    raw.match(
+      /\[MAP_LOCATION\]\s*([\s\S]*?)\s*\[\/MAP_LOCATION\]/i
+    );
+
+  if(!match) return null;
+
+  try{
+
+    const data =
+      JSON.parse(
+        match[1]
+      );
+
+    const lat =
+      Number(data.lat);
+
+    const lng =
+      Number(data.lng);
+
+    if(
+      !Number.isFinite(lat) ||
+      !Number.isFinite(lng)
+    ){
+
+      return null;
+
+    }
+
+    return {
+      name:
+        String(
+          data.name ||
+          'Campus Location'
+        ),
+      lat,
+      lng
+    };
+
+  }catch{
+
+    return null;
+
+  }
+
+}
+
+
+function cleanComplaintDescription(
+  description
+){
+
+  return String(
+    description || ''
+  )
+    .replace(
+      /\[MAP_LOCATION\]\s*[\s\S]*?\s*\[\/MAP_LOCATION\]/ig,
+      ''
+    )
+    .trim();
+
+}
+
+
+function rememberComplaintLocation(
+  complaint
+){
+
+  const loc =
+    extractComplaintLocation(
+      complaint
+    );
+
+  const id =
+    String(
+      complaint?.id || ''
+    );
+
+  if(!id) return;
+
+  if(loc){
+
+    complaintLocationRegistry.set(
+      id,
+      loc
+    );
+
+  }else{
+
+    complaintLocationRegistry.delete(
+      id
+    );
+
+  }
+
+}
+
+
+function renderComplaintLocation(
+  complaint
+){
+
+  const loc =
+    extractComplaintLocation(
+      complaint
+    );
+
+  if(!loc) return '';
+
+  rememberComplaintLocation(
+    complaint
+  );
+
+  return `
+    <div class="location-box">
+
+      <div class="location-box-title">
+        📍 Complaint Location
+      </div>
+
+      <p>
+        <strong>${escapeHtml(loc.name)}</strong>
+      </p>
+
+      <p class="muted">
+        Exact pin recorded by the student on the campus map.
+      </p>
+
+      <div class="location-actions">
+
+        <button
+          class="btn secondary small"
+          onclick="openComplaintMap('${encodeURIComponent(String(complaint.id || ''))}')"
+        >
+          🗺️ View Map
+        </button>
+
+        <button
+          class="btn primary small"
+          onclick="openComplaintMap('${encodeURIComponent(String(complaint.id || ''))}');setTimeout(routeToComplaintLocation,300)"
+        >
+          🧭 Directions
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+}
+
+
+function openComplaintMap(
+  encodedId
+){
+
+  const id =
+    decodeURIComponent(
+      encodedId
+    );
+
+  const target =
+    complaintLocationRegistry.get(
+      id
+    );
+
+  if(!target){
+
+    alert(
+      'No exact map location is stored for this complaint.'
+    );
+
+    return;
+
+  }
+
+  currentComplaintMapTarget = {
+    ...target
+  };
+
+  if(complaintRoute && complaintMap){
+
+    complaintMap.removeLayer(
+      complaintRoute
+    );
+
+    complaintRoute = null;
+
+  }
+
+  if(complaintCurrentMarker && complaintMap){
+
+    complaintMap.removeLayer(
+      complaintCurrentMarker
+    );
+
+    complaintCurrentMarker = null;
+
+  }
+
+  $('locationModalTitle')
+    .textContent =
+      target.name;
+
+  $('locationModalInfo')
+    .innerHTML = `
+      <strong>Destination:</strong>
+      ${escapeHtml(target.name)}
+      <br>
+      <span class="muted">
+        ${target.lat.toFixed(6)}, ${target.lng.toFixed(6)}
+      </span>
+      <br>
+      <span class="muted">
+        Use “My Location & Show Route” to draw the available road route from your current position.
+      </span>
+    `;
+
+  $('locationModal')
+    .classList
+    .remove('hidden');
+
+  initComplaintMap();
+
+  setTimeout(
+    () => {
+
+      if(!complaintMap) return;
+
+      complaintMap.invalidateSize();
+
+      complaintMap.setView(
+        [
+          target.lat,
+          target.lng
+        ],
+        18
+      );
+
+      setComplaintDestinationMarker();
+
+    },
+    100
+  );
+
+}
+
+
+function initComplaintMap(){
+
+  if(!window.L) return;
+
+  const mapEl =
+    $('locationModalMap');
+
+  if(!mapEl) return;
+
+  if(!complaintMap){
+
+    complaintMap =
+      L.map(
+        mapEl
+      );
+
+    L.tileLayer(
+      OSM_TILE_URL,
+      {
+        maxZoom:20,
+        attribution:
+          campusAttribution
+      }
+    ).addTo(
+      complaintMap
+    );
+
+  }
+
+}
+
+
+function setComplaintDestinationMarker(){
+
+  if(!complaintMap ||
+     !currentComplaintMapTarget)
+    return;
+
+  if(complaintDestinationMarker){
+
+    complaintMap.removeLayer(
+      complaintDestinationMarker
+    );
+
+  }
+
+  complaintDestinationMarker =
+    L.marker(
+      [
+        currentComplaintMapTarget.lat,
+        currentComplaintMapTarget.lng
+      ]
+    )
+      .addTo(
+        complaintMap
+      )
+      .bindPopup(
+        `<strong>${escapeHtml(currentComplaintMapTarget.name)}</strong><br>Complaint destination`
+      )
+      .openPopup();
+
+}
+
+
+async function routeToComplaintLocation(){
+
+  if(!currentComplaintMapTarget){
+
+    alert(
+      'Complaint location is not available.'
+    );
+
+    return;
+
+  }
+
+  if(
+    !navigator.geolocation
+  ){
+
+    alert(
+      'Your browser does not support location access. Use Open Navigation instead.'
+    );
+
+    return;
+
+  }
+
+  $('locationModalInfo')
+    .innerHTML = `
+      <strong>Finding your current location...</strong>
+      <br>
+      <span class="muted">
+        Please allow location access in the browser.
+      </span>
+    `;
+
+  navigator.geolocation.getCurrentPosition(
+    async position => {
+
+      const fromLat =
+        position.coords.latitude;
+
+      const fromLng =
+        position.coords.longitude;
+
+      const toLat =
+        currentComplaintMapTarget.lat;
+
+      const toLng =
+        currentComplaintMapTarget.lng;
+
+      if(complaintCurrentMarker){
+
+        complaintMap.removeLayer(
+          complaintCurrentMarker
+        );
+
+      }
+
+      if(complaintRoute){
+
+        complaintMap.removeLayer(
+          complaintRoute
+        );
+
+      }
+
+      complaintCurrentMarker =
+        L.circleMarker(
+          [
+            fromLat,
+            fromLng
+          ],
+          {
+            radius:8,
+            color:'#2563eb',
+            fillColor:'#60a5fa',
+            fillOpacity:.9,
+            weight:3
+          }
+        )
+          .addTo(
+            complaintMap
+          )
+          .bindPopup(
+            '<strong>My Location</strong>'
+          );
+
+      try{
+
+        const url =
+          ROUTER_URL +
+          `${fromLng},${fromLat};${toLng},${toLat}` +
+          '?overview=full&geometries=geojson';
+
+        const response =
+          await fetch(
+            url
+          );
+
+        const data =
+          await response.json();
+
+        if(
+          data.code !== 'Ok' ||
+          !data.routes?.[0]
+        ){
+
+          throw new Error(
+            'Route not available'
+          );
+
+        }
+
+        const route =
+          data.routes[0];
+
+        complaintRoute =
+          L.geoJSON(
+            route.geometry,
+            {
+              style:{
+                weight:5
+              }
+            }
+          )
+            .addTo(
+              complaintMap
+            );
+
+        const bounds =
+          L.latLngBounds(
+            [
+              [fromLat,fromLng],
+              [
+                toLat,
+                toLng
+              ]
+            ]
+          );
+
+        complaintMap.fitBounds(
+          bounds,
+          {
+            padding:[25,25]
+          }
+        );
+
+        $('locationModalInfo')
+          .innerHTML = `
+            <strong>Route ready</strong>
+            <br>
+            From your current location to
+            <strong>${escapeHtml(currentComplaintMapTarget.name)}</strong>.
+            <br>
+            Distance: ${
+              Number(
+                route.distance || 0
+              ) >= 1000
+                ? (
+                    route.distance / 1000
+                  ).toFixed(2) +
+                  ' km'
+                : Math.round(
+                    route.distance || 0
+                  ) + ' m'
+            }
+            <br>
+            Estimated travel time:
+            ${
+              Math.max(
+                1,
+                Math.round(
+                  (route.duration || 0) / 60
+                )
+              )
+            } min
+          `;
+
+      }catch{
+
+        const bounds =
+          L.latLngBounds(
+            [
+              [fromLat,fromLng],
+              [
+                toLat,
+                toLng
+              ]
+            ]
+          );
+
+        complaintMap.fitBounds(
+          bounds,
+          {
+            padding:[25,25]
+          }
+        );
+
+        $('locationModalInfo')
+          .innerHTML = `
+            <strong>Current location found.</strong>
+            <br>
+            The road route could not be loaded from the free routing service.
+            You can still use <strong>Open Navigation</strong>
+            for normal navigation.
+          `;
+
+      }
+
+    },
+    () => {
+
+      $('locationModalInfo')
+        .innerHTML = `
+          <strong>Location permission was not available.</strong>
+          <br>
+          Allow browser location access, or use
+          <strong>Open Navigation</strong>.
+        `;
+
+    },
+    {
+      enableHighAccuracy:true,
+      timeout:10000,
+      maximumAge:30000
+    }
+  );
+
+}
+
+
+function openExternalDirections(){
+
+  if(!currentComplaintMapTarget){
+
+    alert(
+      'Complaint location is not available.'
+    );
+
+    return;
+
+  }
+
+  const url =
+    'https://www.google.com/maps/dir/?api=1' +
+    `&destination=${encodeURIComponent(
+      currentComplaintMapTarget.lat +
+      ',' +
+      currentComplaintMapTarget.lng
+    )}`;
+
+  window.open(
+    url,
+    '_blank',
+    'noopener'
+  );
+
+}
+
+
+function closeLocationModal(){
+
+  $('locationModal')
+    .classList
+    .add('hidden');
+
+}
+
+
+
 function toggleStudentMode(signup){
 
-  $('studentLoginBox')
-    .classList
+  $('studentLoginBox')    .classList
     .toggle(
       'hidden',
       signup
@@ -2556,11 +3718,45 @@ $('complaintForm')
         );
 
 
-        fd.append(
-          'description',
+        const locationName =
+          $('complaintLocation')
+            .value
+            .trim();
+
+        if(!locationName){
+
+          throw new Error(
+            'Please select the complaint location.'
+          );
+
+        }
+
+        if(!selectedComplaintLocation){
+
+          throw new Error(
+            'Please click the exact complaint location on the campus map.'
+          );
+
+        }
+
+        const userDescription =
           $('complaintDescription')
             .value
-            .trim()
+            .trim();
+
+        const mapLocationBlock =
+          `[MAP_LOCATION]\n${JSON.stringify({
+            name:
+              selectedComplaintLocation.name,
+            lat:
+              selectedComplaintLocation.lat,
+            lng:
+              selectedComplaintLocation.lng
+          })}\n[/MAP_LOCATION]`;
+
+        fd.append(
+          'description',
+          `${userDescription}\n\n${mapLocationBlock}`
         );
 
 
@@ -2605,6 +3801,23 @@ $('complaintForm')
 
 
         e.target.reset();
+
+        selectedComplaintLocation =
+          null;
+
+        if(campusMarker && campusMap){
+
+          campusMap.removeLayer(
+            campusMarker
+          );
+
+          campusMarker = null;
+
+        }
+
+        setStudentLocationStatus(
+          'Select a campus location above, then click the exact spot on the map.'
+        );
 
 
         $('filePreview')
@@ -2665,6 +3878,8 @@ async function refreshStudent(){
 
   $('studentEmail').value =
     currentUser?.email || '';
+
+  initStudentLocationMap();
 
 
   try{
@@ -4165,6 +5380,10 @@ function renderTrack(c){
       .join('');
 
 
+  rememberComplaintLocation(
+    c
+  );
+
   const evidence =
     c.photoUrl
       ? `
@@ -4176,6 +5395,10 @@ function renderTrack(c){
       `
       : '';
 
+  const locationTrack =
+    renderComplaintLocation(
+      c
+    );
 
   const aiTrack =
     c.aiAnalysis
@@ -4213,9 +5436,13 @@ function renderTrack(c){
         <p>
           <strong>Description:</strong>
           ${escapeHtml(
-            c.description
+            cleanComplaintDescription(
+              c.description
+            )
           )}
         </p>
+
+        ${locationTrack}
 
 
         <p>
@@ -4393,6 +5620,8 @@ $('staffCreateForm')
 
 
 async function boot(){
+
+  populateComplaintLocations();
 
   updateNav();
 
